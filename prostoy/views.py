@@ -62,7 +62,7 @@ def index(request):
     except:
         sumProstoy = 0
     try:
-        allProduct = round(speed.aggregate(Sum('speed')).get('speed__sum') / 6, 2)
+        allProduct = round(speed.aggregate(Sum('speed')).get('speed__sum') / 20, 2)
         allProc = round(allProduct / plan * 100, 2)
     except:
         allProduct = 0
