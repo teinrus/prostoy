@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>DataTable Inline Editing using Python Flask MySQLdb jquery ajax and X-Editable</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css"
+          rel="stylesheet">
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.min.js"
+            integrity="sha512-VCHVc5miKoln972iJPvkQrUYYq7XpxXzvqNfiul1H4aZDwGBGC0lq373KNleaB2LpnC2a/iNfE5zoRYmB4TRDQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+    <title>Title</title>
+</head>
+
+<body style="padding: 0px 50px; margin-top: 20px;">
+<div class="col-md-6r">
+
+    <script>
+        $(document).ready(function () {
+
+            $(function () {
+                var sor=[];
+
+                let allProstoy
+                var test =
+                {{ prich|safe }}
+                var temp = '%'
+                $('#sample_data tr').mouseup(function () {
+
+                    $('td', this).eq(5).each(function () {
+                        temp= '';
+                        for (let i = 0; i < test.length; i++) {
+                            if ($(this).html() === test[i].key) {
+                                temp += test[i].prichina + '%'
+                            }
+                        }
+
+                        allProstoy = temp.split('%')
+
+                        for (let n = 0; n < allProstoy.length; n++) {
+                            if (allProstoy[n] !== '') {
+                                sor.push({value:allProstoy[n], text: allProstoy[n]})
+                            }
+
+                        }
+
+                        console.log(sor)
+                        msg = $(this).html();
+
+                        $('#sample_data').editable({
+                            container: 'body',
+                            selector: 'td.prichina',
+                            url: '/update',
+                            title: 'prichina',
+                            type: 'POST',
+                            value: "Не выбрано",
+                            source:
+                                function () {
+                                    return sor
+                                },
+
+                            validate: function (value) {
+                                if ($.trim(value)) {
+
+                                }
+                            }
+                        });
+                    })
+                });
+
+            });
+
+
+            var dataTable = $('#sample_data').DataTable();
+
+            $('#sample_data').editable({
+                container: 'body',
+                selector: 'td.uchastok',
+                url: '/update',
+                title: 'uchastok',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    [
+
+                        {% for el in uch %}
+                            {value: "{{ el }}", text: "{{ el }}"},
+                        {% endfor %}],
+
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+
+                        return 'This field is required';
+                    }
+                }
+            });
+
+            $('#sample_data').editable({
+                container: 'body',
+                selector: 'td.otv_pod',
+                url: '/update',
+                title: 'otv_pod',
+                type: 'POST',
+                source: [
+
+                    {% for el in otv_p %}
+                        {value: "{{ el }}", text: "{{ el }}"},
+                    {% endfor %}
+                ],
+                validate: function (value) {
+                    if ($.trim(value)) {
+
+                    }
+
+                }
+            });
+
+            $('#sample_data').editable({
+                container: 'body',
+                selector: 'td.comment',
+                url: '/update',
+                title: 'comment',
+                type: 'POST',
+                value: "Не выбрано",
+
+
+                validate: function (value) {
+                    if ($.trim(value) == '') {
+                        return 'This field is required';
+                    }
+                }
+            });
+
+        })
+        ;
+
+
+    </script>
+
+
+    <script>
+
+    </script>
+
+
+    <script>
+        $(document).ready(function () {
+            setInterval(function () {
+                $.ajax({
+                    type: 'GET',
+                    url: "", // URL of the server-side script
+                    success: function (table) {
+                        console.log(table);
+                        location.reload();
+                    }
+                });
+            }, 180000); // Refresh the content every 5 seconds
+        });
+
+
+    </script>
+    <!-- begin new layouot -->
+    <div class="col__wrapper"
+         style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;">
+        <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000; ">
+            <canvas id="myChart"></canvas>
+        </div>
+        <ul class="col__list">
+            <li class="col__item">
+                <ul>
+                    <li style="list-style-type: none; font-size:23px">Средняя производительность линии</li>
+                    <li style="text-align: center; font-size:70px; list-style-type: none;">{{ avgSpeed }}</li>
+                </ul>
+            </li>
+            <li class="col__item">
+                <ul>
+                    <li style="list-style-type: none; font-size:23px">Колличество продукции</li>
+                    <li style="text-align: center; font-size:70px; list-style-type: none;">{{ allProduct }}</li>
+                </ul>
+            <li class="col__item">
+                <ul>
+                    <li style="list-style-type: none; font-size:23px">Общее время простоя</li>
+                    <li style="text-align: center; font-size:70px; list-style-type: none;">{{ sumProstoy }}</li>
+                </ul>
+            <li class="col__item">
+                <ul>
+                    <li style="list-style-type: none; font-size:23px">Процент выполнения</li>
+                    <li style="text-align: center; font-size:70px; list-style-type: none;">{{ allProc }}</li>
+                </ul>
+        </ul>
+    </div>
+    <style>
+        .col__list {
+            margin: 0;
+            padding: 0;
+            width: calc((100% - 20px) / 2);
+            display: flex;
+            list-style: none;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .col__item {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            width: calc((100% - 10px) / 2);
+            outline: 2px solid #000;
+            justify-content: center;
+            align-items: center;
+            font-size: 15px;
+        }
+
+        .col__item:nth-child(-n+2) {
+            margin-bottom: 10px;
+        }
+
+        .col__item:nth-last-child(-n+2) {
+            margin-bottom: 0px;
+        }
+    </style>
+    <!-- end -->
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <script>
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ lableChart| safe }}
+                ,
+                datasets: [{
+                    label: '# Скороть линии 5',
+                    data: {{ dataChart | safe }},
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+
+    <table id="sample_data" class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>Дата</th>
+            <th>Время начала простоя</th>
+            <th>Время простоя</th>
+            <th>Участок</th>
+            <th>Ответст. подразделение</th>
+            <th>Причина</th>
+            <th>Комментарий</th>
+        </thead>
+        <tbody>
+        {% for row in table %}
+            <tr>
+                <td data-pk="{{ row.id }}">{{ row.id }}</td>
+                <td data-name="startdata" class="startdata" data-type="text"
+                    data-pk="{{ row.id }}">{{ row.startdata }}</td>
+                <td data-name="starttime" class="starttime" data-type="text"
+                    data-pk="{{ row.id }}">{{ row.starttime }}</td>
+                <td data-name="prostoy" class="prostoy" data-type="text" data-pk="{{ row.id }}">{{ row.prostoy }}
+                </td>
+                <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select" data-pk="{{ row.id }}">
+                    {{ row.uchastok }}</td>
+
+                <td data-name="otv_pod" class="otv_pod" data-type="select" data-pk="{{ row.id }}">{{ row.otv_pod }}
+                </td>
+
+                <td data-name="prichina" class="prichina" data-type="select"
+                    data-pk="{{ row.id }}">{{ row.prichina }}</td>
+                <td data-name="comment" class="comment" data-type="text" data-pk="{{ row.id }}">{{ row.comment }}
+                </td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+</div>
+
+
+<a href="{% url 'otchet' %}">Отчет</a>
+
+
+</div>
+</div>
+
+
+</body>
+
+</html>

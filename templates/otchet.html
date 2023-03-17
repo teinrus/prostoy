@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.min.js"
+            integrity="sha512-VCHVc5miKoln972iJPvkQrUYYq7XpxXzvqNfiul1H4aZDwGBGC0lq373KNleaB2LpnC2a/iNfE5zoRYmB4TRDQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <title>Отчет простоев линии 5</title>
+
+</head>
+
+<body style="padding: 0px 50px; margin-top: 20px;">
+
+<h4 media="print-v" style="visibility: hidden">Общее время простоя {{ sumProstoy }}</h4>
+
+
+<h4>Общее время простоя {{ sumProstoy }}</h4>
+<h4>Средняя скорость {{ avgSpeed }}</h4>
+
+<div class="col__wrapper" style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;">
+    <div class="col" style="width: calc((100% - 30px) / 2);">
+        <canvas id="myChart"></canvas>
+    </div>
+    <ul class="col__list">
+        <li class="col__item">
+            <ul>
+                <form class="not-print" action="" method="get" style='display:table-caption;'>
+                    {{ form.as_ul }}
+                    <input class="not-print" type="submit" value="Сформировать" style="margin-top: 20px;">
+                </form>
+            </ul>
+        </li>
+
+        <li class="col__item">
+            <ul class="not-print" media="print" style="">
+                <li class="not-print">
+                    <a onclick="window.print()" media="print" style="margin-top: 20px;">Распечатать
+                </a>
+                </li>
+                <li class="not-print">
+                    <a media="print" href="{% url 'home' %}">Вернуться</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+</div>
+
+<table id="otchet_data" class="table table-bordered table-striped"
+       style="width: calc((100% - 30px)); outline: 2px solid #000; margin-top: 20px;">
+    <thead>
+    <tr>
+        <th>Дата</th>
+        <th>Время начала простоя</th>
+        <th>Время простоя</th>
+        <th>Участок</th>
+        <th>Причина</th>
+        <th>Ответст. подразделение</th>
+        <th>Комментарий</th>
+    </thead>
+    <tbody>
+    {% for row in table %}
+        <tr>
+            <td>{{ row.startdata }}</td>
+            <td>{{ row.starttime }}</td>
+            <td>{{ row.prostoy }}
+            </td>
+
+            <td>{{ row.uchastok }}</td>
+            <td>{{ row.prichina }}</td>
+            <td>{{ row.otv_pod }}
+            </td>
+            <td>{{ row.comment }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<style>
+    @media print {
+        .not-print {
+            visibility: hidden;
+        }
+    }
+
+    @media print-v {
+        .not-print {
+            visibility: visible;
+        }
+    }
+</style>
+
+<script>
+    const ctx = document.getElementById('myChart');
+
+    new Chart(ctx, {
+        type: 'line',
+
+        data: {
+            labels: {{ lableChart| safe }}
+            ,
+            datasets: [{
+                borderColor: 'rgb(0,101,255)',
+                label: '# Скороть линии 5',
+                data: {{ dataChart | safe }},
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+<style>
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .col__list {
+        margin: 0;
+        padding: 0;
+        width: calc((100% - 20px) / 2);
+        display: flex;
+        list-style: none;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .col__item {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        width: calc((100% - 10px) / 2);
+
+        justify-content: left;
+        {#align-items: center;#}
+        font-size: 25px;
+    }
+
+    .col__item:nth-child(-n+2) {
+        margin-bottom: 10px;
+    }
+
+    .col__item:nth-last-child(-n+2) {
+        margin-bottom: 0px;
+    }
+</style>
+
+
+</body>
+</html>
