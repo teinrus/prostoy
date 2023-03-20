@@ -203,6 +203,7 @@ def otchet(request):
 
     otv_p = otv_pod.objects.all()
     uch = uchastok.objects.all()
+    prich = prichina.objects.all()
 
     return render(request, "otchet.html", {
         'table': table,
@@ -216,6 +217,8 @@ def otchet(request):
         'dataChart': dataChart,
 
 
+        'otv_p': otv_p,
+        'prich': prich,
         'uch': uch,
 
     })

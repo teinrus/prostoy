@@ -11,7 +11,7 @@
 
     <title>Отчет простоев линии 5</title>
 
-        <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
@@ -38,44 +38,73 @@
 
 
 <script>
-        $(document).ready(function () {
-             var dataTable = $('#sample_data').DataTable()
-            $('#sample_data').editable({
-                container: 'body',
-                selector: 'td.uchastok',
-                url: '/update',
-                title: 'uchastok',
-                type: 'POST',
-                value: "Не выбрано",
-                source:
-                    [
+    $(document).ready(function () {
+        var dataTable = $('#sample_data').DataTable()
+        $('#sample_data').editable({
+            container: 'body',
+            selector: 'td.uchastok',
+            url: '/update',
+            title: 'uchastok',
+            type: 'POST',
+            value: "Не выбрано",
+            source:
+                [
 
-                        {% for el in uch %}
-                            {value: "{{ el }}", text: "{{ el }}"},
-                        {% endfor %}],
+                    {% for el in uch %}
+                        {value: "{{ el }}", text: "{{ el }}"},
+                    {% endfor %}],
 
-                validate: function (value) {
-                    if ($.trim(value) == '') {
+            validate: function (value) {
+                if ($.trim(value) == '') {
 
-                        return 'This field is required';
-                    }
+                    return 'This field is required';
                 }
-            });
+            }
+        });
 
 
-        })
-        ;
+        $('#sample_data').editable({
+            container: 'body',
+            selector: 'td.otv_pod',
+            url: '/update',
+            title: 'otv_pod',
+            type: 'POST',
+            source: [
+
+                {% for el in otv_p %}
+                    {value: "{{ el }}", text: "{{ el }}"},
+                {% endfor %}
+            ],
+            validate: function (value) {
+                if ($.trim(value)) {
+
+                }
+
+            }
+        });
+        $('#sample_data').editable({
+            container: 'body',
+            selector: 'td.prichina',
+            url: '/update',
+            title: 'prichina',
+            type: 'POST',
+            value: "Не выбрано",
+            source: [
+                {% for el in prich %}
+                    {value: "{{ el }}", text: "{{ el }}"},
+                {% endfor %}
+            ],
+
+
+            validate: function (value) {
+                if ($.trim(value)) {
+
+                }
+            }
+        });
+    })
+    ;
 </script>
-
-
-
-
-
-
-
-
-
-
 
 
 <h4 media="print-v" style="visibility: hidden">Общее время простоя {{ sumProstoy }}</h4>
@@ -85,7 +114,8 @@
 <h4>Средняя скорость {{ avgSpeed }}</h4>
 <h4>Количество взрывов {{ boomOut }}</h4>
 
-<div class="col__wrapper" style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;">
+<div class="col__wrapper"
+     style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;">
     <div class="col" style="width: calc((100% - 30px) / 2);">
         <canvas id="myChart"></canvas>
     </div>
@@ -103,7 +133,7 @@
             <ul class="not-print" media="print" style="">
                 <li class="not-print">
                     <a onclick="window.print()" media="print" style="margin-top: 20px;">Распечатать
-                </a>
+                    </a>
                 </li>
                 <li class="not-print">
                     <a media="print" href="{% url 'home' %}">Вернуться</a>
@@ -122,8 +152,9 @@
         <th>Время начала простоя</th>
         <th>Время простоя</th>
         <th>Участок</th>
-        <th>Причина</th>
+
         <th>Ответст. подразделение</th>
+        <th>Причина</th>
         <th>Комментарий</th>
     </thead>
     <tbody>
@@ -134,10 +165,13 @@
             <td>{{ row.prostoy }}
             </td>
 
-            <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select" data-pk="{{ row.id }}">{{ row.uchastok }}</td>
-            <td>{{ row.prichina }}</td>
-            <td>{{ row.otv_pod }}
-            </td>
+            <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
+                data-pk="{{ row.id }}">{{ row.uchastok }}</td>
+            <td data-name="otv_pod" class="otv_pod" data-type="select" data-pk="{{ row.id }}">{{ row.otv_pod }}
+                    </td>
+            <td data-name="prichina" class="prichina" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.prichina }}</td>
+
             <td>{{ row.comment }}</td>
         </tr>
     {% endfor %}
@@ -207,8 +241,7 @@
         width: calc((100% - 10px) / 2);
 
         justify-content: left;
-        {#align-items: center;#}
-        font-size: 25px;
+    {#align-items: center;#} font-size: 25px;
     }
 
     .col__item:nth-child(-n+2) {
