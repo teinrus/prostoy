@@ -7,9 +7,9 @@ class Table5(models.Model):
     starttime = models.TimeField('Время начала простоя')
     prostoy = models.TimeField('Время простоя', blank=True, null=True)
 
-    uchastok = models.CharField('Где произошол простой', max_length=50, default='Не определено', blank=True, null=True)
-    prichina = models.CharField('Причина', max_length=50, default='Не определена', blank=True, null=True)
-    otv_pod = models.CharField('Ответственное подразделение', max_length=50, default='Не определено', blank=True,
+    uchastok = models.CharField('Где произошол простой', max_length=50, default='', blank=True, null=True)
+    prichina = models.CharField('Причина', max_length=50, default='', blank=True, null=True)
+    otv_pod = models.CharField('Ответственное подразделение', max_length=50, default='', blank=True,
                                null=True)
     comment = models.CharField('Комментарий', max_length=50, default=' ', blank=True, null=True)
 
@@ -60,3 +60,14 @@ class uchastok(models.Model):
 
     class Meta:
         verbose_name_plural = "Участок линии"
+
+class bottleExplosion(models.Model):
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+    bottle = models.IntegerField('Скорость линии')
+
+    def __str__(self):
+        return str(self.data)+'_' + str(self.time)
+
+    class Meta:
+        verbose_name_plural = "Взрывы бутылок"

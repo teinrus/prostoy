@@ -162,6 +162,9 @@ def otchet(request):
     except:
         lableChart = []
         dataChart = []
+    otv_p = otv_pod.objects.all()
+    uch = uchastok.objects.all()
+
     return render(request, "otchet.html", {
         'table': table,
         'form': form,
@@ -171,6 +174,9 @@ def otchet(request):
 
         'lableChart': lableChart,
         'dataChart': dataChart,
+
+
+        'uch': uch,
 
     })
 
@@ -182,7 +188,7 @@ def getData(requst):
 
 
 def update(request):
-    prich = prichina.objects.all()
+
     if request.method == 'POST':
 
         pk = request.POST.get('pk')
