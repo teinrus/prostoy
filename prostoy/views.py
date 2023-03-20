@@ -32,6 +32,9 @@ def index(request):
             speed = speed5.objects.filter(data=datetime.date.today(),
                                           time__gte=datetime.time(8),
                                           time__lte=datetime.time(16, 30))
+            boom= bottleExplosion.objects.filter(data=datetime.date.today(),
+                                          time__gte=datetime.time(8),
+                                          time__lte=datetime.time(16, 30))
 
         elif end1 <= datetime.datetime.now().time() <= end2:
 
@@ -42,6 +45,9 @@ def index(request):
             speed = speed5.objects.filter(data=datetime.date.today(),
                                           time__gte=datetime.time(16, 29),
                                           time__lte=datetime.time(23, 59))
+            boom = bottleExplosion.objects.filter(data=datetime.date.today(),
+                                          time__gte=datetime.time(16, 29),
+                                          time__lte=datetime.time(23, 59))
         else:
             plan = 29000
             table = Table5.objects.filter(startdata=datetime.date.today(),
@@ -50,6 +56,9 @@ def index(request):
             speed = speed5.objects.filter(data=datetime.date.today(),
                                           time__gte=datetime.time(00, 00),
                                           time__lte=datetime.time(8, 0))
+            boom = bottleExplosion.objects.filter(data=datetime.date.today(),
+                                          time__gte=datetime.time(16, 29),
+                                          time__lte=datetime.time(23, 59))
 
     lableChart = []
     dataChart = []
@@ -64,9 +73,14 @@ def index(request):
     try:
         allProduct = round(speed.aggregate(Sum('speed')).get('speed__sum') / 20, 2)
         allProc = round(allProduct / plan * 100, 2)
+
     except:
         allProduct = 0
         allProc = 0
+    try:
+        boomOut = boom.aggregate(Sum('bottle')).get('bottle__sum')
+    except:
+        boomOut=0
 
     for sp in speed:
         lableChart.append(str(sp.time))
@@ -81,12 +95,16 @@ def index(request):
     return render(request, "index.html", {
         'table': table,
         'speed': speed,
+
         'lableChart': lableChart,
         'dataChart': dataChart,
+
         'sumProstoy': sumProstoy,
         'avgSpeed': avgSpeed,
         'allProduct': allProduct,
         'allProc': allProc,
+        'boomOut':boomOut,
+
         'otv_p': otv_p,
         'prich': prich,
         'uch': uch,
@@ -111,6 +129,10 @@ def otchet(request):
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(0),
                                                   time__lte=datetime.time(23, 59))
+                    boom = bottleExplosion.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                  data__lte=form.cleaned_data["finish_data"],
+                                                  time__gte=datetime.time(0),
+                                                  time__lte=datetime.time(23, 59))
                 if form.cleaned_data["SmenaF"] == 'Smena 1':
                     table = Table5.objects.filter(starttime__gte=datetime.time(8),
                                                   starttime__lte=datetime.time(16, 30),
@@ -118,6 +140,10 @@ def otchet(request):
                                                   startdata__lte=form.cleaned_data["finish_data"]
                                                   ).order_by('startdata', 'starttime')
                     speed = speed5.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                  data__lte=form.cleaned_data["finish_data"],
+                                                  time__gte=datetime.time(8),
+                                                  time__lte=datetime.time(16, 30))
+                    boom = bottleExplosion.objects.filter(data__gte=form.cleaned_data["start_data"],
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(8),
                                                   time__lte=datetime.time(16, 30))
@@ -131,6 +157,10 @@ def otchet(request):
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(16, 30),
                                                   time__lte=datetime.time(23, 59))
+                    boom = bottleExplosion.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                  data__lte=form.cleaned_data["finish_data"],
+                                                  time__gte=datetime.time(16, 30),
+                                                  time__lte=datetime.time(23, 59))
                 if form.cleaned_data["SmenaF"] == 'Smena 3':
                     table = Table5.objects.filter(starttime__gte=datetime.time(00, 00),
                                                   starttime__lte=datetime.time(8, 00),
@@ -141,11 +171,19 @@ def otchet(request):
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(00, 00),
                                                   time__lte=datetime.time(8, 00))
+                    boom = bottleExplosion.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                  data__lte=form.cleaned_data["finish_data"],
+                                                  time__gte=datetime.time(00, 00),
+                                                  time__lte=datetime.time(8, 00))
         # Сортировка по сменам:
 
     lableChart = []
     dataChart = []
 
+    try:
+        boomOut = boom.aggregate(Sum('bottle')).get('bottle__sum')
+    except:
+        boomOut=0
     try:
         sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum')
     except:
@@ -162,6 +200,7 @@ def otchet(request):
     except:
         lableChart = []
         dataChart = []
+
     otv_p = otv_pod.objects.all()
     uch = uchastok.objects.all()
 
@@ -171,6 +210,7 @@ def otchet(request):
 
         'sumProstoy': sumProstoy,
         'avgSpeed': avgSpeed,
+        'boomOut':boomOut,
 
         'lableChart': lableChart,
         'dataChart': dataChart,
@@ -228,6 +268,6 @@ def update(request):
             except:
                 a = Table5(comment=v, id=pk)
                 a.save()
-    print(prich)
+
 
     return HttpResponse('yes')

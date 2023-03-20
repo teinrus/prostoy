@@ -64,7 +64,7 @@ class uchastok(models.Model):
 class bottleExplosion(models.Model):
     data = models.DateField('Дата')
     time = models.TimeField('Время')
-    bottle = models.IntegerField('Скорость линии')
+    bottle = models.IntegerField('Взрыв')
 
     def __str__(self):
         return str(self.data)+'_' + str(self.time)
