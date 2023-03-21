@@ -68,17 +68,23 @@ def index(request):
         avgSpeed = 0
     try:
         sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum')
+        if (sumProstoy==None) :
+            sumProstoy='00:00'
     except:
         sumProstoy = 0
     try:
         allProduct = round(speed.aggregate(Sum('speed')).get('speed__sum') / 20, 2)
         allProc = round(allProduct / plan * 100, 2)
 
+
+
     except:
         allProduct = 0
         allProc = 0
     try:
         boomOut = boom.aggregate(Sum('bottle')).get('bottle__sum')
+        if (boomOut == None):
+            boomOut = 0
     except:
         boomOut=0
 
@@ -86,7 +92,7 @@ def index(request):
         lableChart.append(str(sp.time))
         dataChart.append(sp.speed)
     otv_p = otv_pod.objects.all()
-    #prich = list(prichina.objects.all().values_list())
+
     prich = list(prichina.objects.all().values())
 
 
@@ -182,6 +188,8 @@ def otchet(request):
 
     try:
         boomOut = boom.aggregate(Sum('bottle')).get('bottle__sum')
+        if (boomOut == None):
+            boomOut = 0
     except:
         boomOut=0
     try:
