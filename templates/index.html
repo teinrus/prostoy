@@ -155,6 +155,44 @@
 
     <script>
 
+
+        $(document).ready(function () {
+            setInterval(function () {
+
+                $.ajax({
+                    url: 'getData',
+                    method: 'post',
+                    success: function (data) {
+                        $('#avgSpeeds').html(data.avgSpeed);
+                        $('#allProc').html(data.allProc);
+                        $('#boomOut').html(data.boomOut);
+                        $('#sumProstoy').html(data.sumProstoy);
+
+                    }
+                });
+                const ctx = document.getElementById('myChart');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: {{ lableChart| safe }}
+                        ,
+                        datasets: [{
+                            label: '# Производительность линии 5',
+                            data: {{ dataChart | safe }},
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+            }, 2000); // Refresh the content every 5 seconds
+        });
     </script>
 
 
@@ -164,12 +202,11 @@
                 $.ajax({
                     type: 'GET',
                     url: "", // URL of the server-side script
-                    success: function (table) {
-                        console.log(table);
+                    success: function () {
                         location.reload();
                     }
                 });
-            }, 180000); // Refresh the content every 5 seconds
+            }, 600000); // Refresh the content every 5 seconds
         });
 
 
@@ -184,23 +221,24 @@
             <li class="col__item">
                 <ul>
                     <li style="list-style-type: none; font-size:23px">Средняя производительность линии</li>
-                    <li style="text-align: center; font-size:70px; list-style-type: none;">{{ avgSpeed }}</li>
+                    <li id="avgSpeeds"
+                        style="text-align: center; font-size:70px; list-style-type: none;">{{ avgSpeed }}</li>
                 </ul>
             </li>
             <li class="col__item">
                 <ul>
                     <li style="list-style-type: none; font-size:23px">Взрывы бутылки</li>
-                    <li style="text-align: center; font-size:70px; list-style-type: none;">{{ boomOut }}</li>
+                    <li id="boomOut" style="text-align: center; font-size:70px; list-style-type: none;"></li>
                 </ul>
             <li class="col__item">
                 <ul>
                     <li style="list-style-type: none; font-size:23px">Общее время простоя</li>
-                    <li style="text-align: center; font-size:70px; list-style-type: none;">{{ sumProstoy }}</li>
+                    <li id="sumProstoy" style="text-align: center; font-size:70px; list-style-type: none;"></li>
                 </ul>
             <li class="col__item">
                 <ul>
                     <li style="list-style-type: none; font-size:23px">Процент выполнения</li>
-                    <li style="text-align: center; font-size:70px; list-style-type: none;">{{ allProc }}</li>
+                    <li id="allProc" style="text-align: center; font-size:70px; list-style-type: none;"></li>
                 </ul>
         </ul>
     </div>
@@ -241,27 +279,7 @@
 
 
     <script>
-        const ctx = document.getElementById('myChart');
 
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: {{ lableChart| safe }}
-                ,
-                datasets: [{
-                    label: '# Производительность линии 5',
-                    data: {{ dataChart | safe }},
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
     </script>
 
 

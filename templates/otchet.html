@@ -111,7 +111,7 @@
 
 
 <h4>Общее время простоя {{ sumProstoy }}</h4>
-<h4>Средняя скорость {{ avgSpeed }}</h4>
+<h4>Средняя скорость {{ avgSpeed }} </h4>
 <h4>Количество взрывов {{ boomOut }}</h4>
 
 <div class="col__wrapper"
@@ -126,6 +126,8 @@
                     {{ form.as_ul }}
                     <input class="not-print" type="submit" value="Сформировать" style="margin-top: 20px;">
                 </form>
+
+
             </ul>
         </li>
 
@@ -168,15 +170,18 @@
             <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select"
                 data-pk="{{ row.id }}">{{ row.uchastok }}</td>
             <td data-name="otv_pod" class="otv_pod" data-type="select" data-pk="{{ row.id }}">{{ row.otv_pod }}
-                    </td>
+            </td>
             <td data-name="prichina" class="prichina" data-type="select"
-                        data-pk="{{ row.id }}">{{ row.prichina }}</td>
+                data-pk="{{ row.id }}">{{ row.prichina }}</td>
 
             <td>{{ row.comment }}</td>
         </tr>
     {% endfor %}
     </tbody>
 </table>
+
+
+
 
 <style>
     @media print {
