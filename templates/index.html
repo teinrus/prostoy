@@ -30,7 +30,7 @@
 <body style="padding: 0px 50px; margin-top: 20px;">
 <div class="col-md-6r">
 
-    <script>
+    <script> // зависимости выпадающих списков таблици
         $(document).ready(function () {
 
             $(function () {
@@ -153,9 +153,7 @@
     </script>
 
 
-    <script>
-
-
+    <script>//ajax для перезагрузки графика и ли
         $(document).ready(function () {
             var Char = null;
             setInterval(function () {
@@ -171,8 +169,6 @@
                         $('#sumProstoy').html(data.sumProstoy);
 
                         if (Char != null) {
-                            console.log("tut")
-                            Char.clear();
                             Char.destroy();
                         }
                         ;
@@ -188,9 +184,7 @@
                                 }]
                             },
                             options: {
-                                animation: {
-                                    duration: 0
-                                },
+                                animation: false,
                                 scales: {
                                     y: {
                                         beginAtZero: true
@@ -204,10 +198,15 @@
                 });
 
 
-            }, 2000); // Refresh the content every 5 seconds
+            }, 1000);
+
         });
     </script>
+    <script>
 
+
+
+    </script>
 
     <script>
         $(document).ready(function () {
@@ -219,7 +218,7 @@
                         location.reload();
                     }
                 });
-            }, 600000); // Refresh the content every 5 seconds
+            }, 300000); // Refresh the content every 5 seconds
         });
 
 
@@ -290,48 +289,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
-    {#    <table id="sample_data" class="table table-bordered table-striped">#}
-    {#        <thead>#}
-    {#        <tr>#}
-    {#            <th>id</th>#}
-    {#            <th>Дата</th>#}
-    {#            <th>Время начала простоя</th>#}
-    {#            <th>Время простоя</th>#}
-    {#            <th>Участок</th>#}
-    {#            <th>Ответст. подразделение</th>#}
-    {#            <th>Причина</th>#}
-    {#            <th>Комментарий</th>#}
-    {#        </thead>#}
-    {#        <tbody>#}
-    {#        {% for row in table %}#}
-    {#            {% if row.prichina == None %}#}
-    {#                <tr>#}
-    {#                    <td data-pk="{{ row.id }}">{{ row.id }}</td>#}
-    {#                    <td data-name="startdata" class="startdata" data-type="text"#}
-    {#                        data-pk="{{ row.id }}">{{ row.startdata }}</td>#}
-    {#                    <td data-name="starttime" class="starttime" data-type="text"#}
-    {#                        data-pk="{{ row.id }}">{{ row.starttime }}</td>#}
-    {#                    <td data-name="prostoy" class="prostoy" data-type="text" data-pk="{{ row.id }}">{{ row.prostoy }}#}
-    {#                    </td>#}
-    {#                    <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select" data-pk="{{ row.id }}">#}
-    {#                        {{ row.uchastok }}</td>#}
-    {##}
-    {#                    <td data-name="otv_pod" class="otv_pod" data-type="select" data-pk="{{ row.id }}">{{ row.otv_pod }}#}
-    {#                    </td>#}
-    {##}
-    {#                    <td data-name="prichina" class="prichina" data-type="select"#}
-    {#                        data-pk="{{ row.id }}">{{ row.prichina }}</td>#}
-    {#                    <td data-name="comment" class="comment" data-type="text" data-pk="{{ row.id }}">{{ row.comment }}#}
-    {#                    </td>#}
-    {#                </tr>#}
-    {#            {% endif %}#}
-    {#        {% endfor %}#}
-    {##}
-    {#        </tbody>#}
-    {##}
-    {#    </table>#}
-
-    <table id="sample_data2" class="table table-bordered table-striped">
+    <table id="sample_data" class="table table-bordered table-striped">
         <thead>
         <tr>
             <th>id</th>
@@ -344,9 +302,50 @@
             <th>Комментарий</th>
         </thead>
         <tbody>
+        {% for row in table %}
+            {% if row.prichina == None %}
+                <tr>
+                    <td data-pk="{{ row.id }}">{{ row.id }}</td>
+                    <td data-name="startdata" class="startdata" data-type="text"
+                        data-pk="{{ row.id }}">{{ row.startdata }}</td>
+                    <td data-name="starttime" class="starttime" data-type="text"
+                        data-pk="{{ row.id }}">{{ row.starttime }}</td>
+                    <td data-name="prostoy" class="prostoy" data-type="text" data-pk="{{ row.id }}">{{ row.prostoy }}
+                    </td>
+                    <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select" data-pk="{{ row.id }}">
+                        {{ row.uchastok }}</td>
+
+                    <td data-name="otv_pod" class="otv_pod" data-type="select" data-pk="{{ row.id }}">{{ row.otv_pod }}
+                    </td>
+
+                    <td data-name="prichina" class="prichina" data-type="select"
+                        data-pk="{{ row.id }}">{{ row.prichina }}</td>
+                    <td data-name="comment" class="comment" data-type="text" data-pk="{{ row.id }}">{{ row.comment }}
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+
         </tbody>
 
     </table>
+
+    {#    <table id="sample_data2" class="table table-bordered table-striped">#}
+    {#        <thead>#}
+    {#        <tr>#}
+    {#            <th>id</th>#}
+    {#            <th>Дата</th>#}
+    {#            <th>Время начала простоя</th>#}
+    {#            <th>Время простоя</th>#}
+    {#            <th>Участок</th>#}
+    {#            <th>Ответст. подразделение</th>#}
+    {#            <th>Причина</th>#}
+    {#            <th>Комментарий</th>#}
+    {#        </thead>#}
+    {#        <tbody>#}
+    {#        </tbody>#}
+    {##}
+    {#    </table>#}
 
 
 </div>
