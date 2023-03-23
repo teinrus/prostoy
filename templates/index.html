@@ -157,39 +157,52 @@
 
 
         $(document).ready(function () {
+            var Char = null;
             setInterval(function () {
 
                 $.ajax({
                     url: 'getData',
                     method: 'post',
                     success: function (data) {
+
                         $('#avgSpeeds').html(data.avgSpeed);
                         $('#allProc').html(data.allProc);
                         $('#boomOut').html(data.boomOut);
                         $('#sumProstoy').html(data.sumProstoy);
 
-                    }
-                });
-                const ctx = document.getElementById('myChart');
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: {{ lableChart| safe }}
-                        ,
-                        datasets: [{
-                            label: '# Производительность линии 5',
-                            data: {{ dataChart | safe }},
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
+                        if (Char != null) {
+                            console.log("tut")
+                            Char.clear();
+                            Char.destroy();
                         }
+                        ;
+
+                        Char = new Chart("myChart", {
+                            type: 'bar',
+                            data: {
+                                labels: data.lableChart,
+                                datasets: [{
+                                    label: '# Производительность линии 5',
+                                    data: data.dataChart,
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                animation: {
+                                    duration: 0
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+
+
                     }
                 });
+
 
             }, 2000); // Refresh the content every 5 seconds
         });
@@ -274,16 +287,51 @@
     </style>
     <!-- end -->
 
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
-    <script>
+    {#    <table id="sample_data" class="table table-bordered table-striped">#}
+    {#        <thead>#}
+    {#        <tr>#}
+    {#            <th>id</th>#}
+    {#            <th>Дата</th>#}
+    {#            <th>Время начала простоя</th>#}
+    {#            <th>Время простоя</th>#}
+    {#            <th>Участок</th>#}
+    {#            <th>Ответст. подразделение</th>#}
+    {#            <th>Причина</th>#}
+    {#            <th>Комментарий</th>#}
+    {#        </thead>#}
+    {#        <tbody>#}
+    {#        {% for row in table %}#}
+    {#            {% if row.prichina == None %}#}
+    {#                <tr>#}
+    {#                    <td data-pk="{{ row.id }}">{{ row.id }}</td>#}
+    {#                    <td data-name="startdata" class="startdata" data-type="text"#}
+    {#                        data-pk="{{ row.id }}">{{ row.startdata }}</td>#}
+    {#                    <td data-name="starttime" class="starttime" data-type="text"#}
+    {#                        data-pk="{{ row.id }}">{{ row.starttime }}</td>#}
+    {#                    <td data-name="prostoy" class="prostoy" data-type="text" data-pk="{{ row.id }}">{{ row.prostoy }}#}
+    {#                    </td>#}
+    {#                    <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select" data-pk="{{ row.id }}">#}
+    {#                        {{ row.uchastok }}</td>#}
+    {##}
+    {#                    <td data-name="otv_pod" class="otv_pod" data-type="select" data-pk="{{ row.id }}">{{ row.otv_pod }}#}
+    {#                    </td>#}
+    {##}
+    {#                    <td data-name="prichina" class="prichina" data-type="select"#}
+    {#                        data-pk="{{ row.id }}">{{ row.prichina }}</td>#}
+    {#                    <td data-name="comment" class="comment" data-type="text" data-pk="{{ row.id }}">{{ row.comment }}#}
+    {#                    </td>#}
+    {#                </tr>#}
+    {#            {% endif %}#}
+    {#        {% endfor %}#}
+    {##}
+    {#        </tbody>#}
+    {##}
+    {#    </table>#}
 
-    </script>
-
-
-    <table id="sample_data" class="table table-bordered table-striped">
+    <table id="sample_data2" class="table table-bordered table-striped">
         <thead>
         <tr>
             <th>id</th>
@@ -296,33 +344,11 @@
             <th>Комментарий</th>
         </thead>
         <tbody>
-        {% for row in table %}
-            {% if row.prichina == None %}
-                <tr>
-                    <td data-pk="{{ row.id }}">{{ row.id }}</td>
-                    <td data-name="startdata" class="startdata" data-type="text"
-                        data-pk="{{ row.id }}">{{ row.startdata }}</td>
-                    <td data-name="starttime" class="starttime" data-type="text"
-                        data-pk="{{ row.id }}">{{ row.starttime }}</td>
-                    <td data-name="prostoy" class="prostoy" data-type="text" data-pk="{{ row.id }}">{{ row.prostoy }}
-                    </td>
-                    <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select" data-pk="{{ row.id }}">
-                        {{ row.uchastok }}</td>
-
-                    <td data-name="otv_pod" class="otv_pod" data-type="select" data-pk="{{ row.id }}">{{ row.otv_pod }}
-                    </td>
-
-                    <td data-name="prichina" class="prichina" data-type="select"
-                        data-pk="{{ row.id }}">{{ row.prichina }}</td>
-                    <td data-name="comment" class="comment" data-type="text" data-pk="{{ row.id }}">{{ row.comment }}
-                    </td>
-                </tr>
-            {% endif %}
-        {% endfor %}
-
         </tbody>
 
     </table>
+
+
 </div>
 
 

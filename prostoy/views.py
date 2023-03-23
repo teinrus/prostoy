@@ -59,12 +59,6 @@ def index(request):
                                                   time__gte=datetime.time(16, 29),
                                                   time__lte=datetime.time(23, 59))
 
-    lableChart = []
-    dataChart = []
-
-    for sp in speed:
-        lableChart.append(str(sp.time))
-        dataChart.append(sp.speed)
 
     otv_p = otv_pod.objects.all()
 
@@ -75,8 +69,7 @@ def index(request):
         'table': table,
         'speed': speed,
 
-        'lableChart': lableChart,
-        'dataChart': dataChart,
+
 
         'otv_p': otv_p,
         'prich': prich,
@@ -264,7 +257,22 @@ def getData(requst):
             boomOut = 0
     except:
         boomOut = 0
-    result = {"allProc": allProc, "boomOut": boomOut,'sumProstoy':str(sumProstoy),'avgSpeed':avgSpeed}
+
+    lableChart = []
+    dataChart = []
+
+    for sp in speed:
+        lableChart.append(str(sp.time))
+        dataChart.append(sp.speed)
+
+
+    result = {"allProc": allProc,
+              "boomOut": boomOut,
+              'sumProstoy':str(sumProstoy),
+              'avgSpeed':avgSpeed,
+              'lableChart':lableChart,
+              'dataChart':dataChart,
+              }
     return JsonResponse(result)
 
 
