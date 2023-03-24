@@ -1,209 +1,192 @@
-<!DOCTYPE html>
-<html lang="ru">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Система учета простоев</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
-    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"/>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css"
-          rel="stylesheet">
-    <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.min.js"
-            integrity="sha512-VCHVc5miKoln972iJPvkQrUYYq7XpxXzvqNfiul1H4aZDwGBGC0lq373KNleaB2LpnC2a/iNfE5zoRYmB4TRDQ=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-
-    <title>Title</title>
-</head>
+{% block content %}
 
 <body style="padding: 0px 50px; margin-top: 20px;">
 <div class="col-md-6r">
 
     <script> // зависимости выпадающих списков таблици
-        $(document).ready(function () {
+    $(document).ready(function () {
 
-            $(function () {
-                var sor = [];
+        $(function () {
+            var sor = [];
 
-                let allProstoy
-                var test =
-                {{ prich|safe }}
-                var temp = '%'
-                $('#sample_data tr').mouseup(function () {
+            let allProstoy
+            var test =
+            {{ prich|safe }}
+            var temp = '%'
+            $('#sample_data tr').mouseup(function () {
 
-                    $('td', this).eq(5).each(function () {
-                        temp = '';
-                        for (let i = 0; i < test.length; i++) {
-                            if ($(this).html() === test[i].key) {
-                                temp += test[i].prichina + '%'
-                            }
+                $('td', this).eq(5).each(function () {
+                    temp = '';
+                    for (let i = 0; i < test.length; i++) {
+                        if ($(this).html() === test[i].key) {
+                            temp += test[i].prichina + '%'
                         }
-
-                        allProstoy = temp.split('%')
-                        sor = [];
-                        for (let n = 0; n < allProstoy.length; n++) {
-                            if (allProstoy[n] !== '') {
-                                sor.push({value: allProstoy[n], text: allProstoy[n]})
-                            }
-
-                        }
-
-                        console.log(sor)
-                        msg = $(this).html();
-
-                        $('#sample_data').editable({
-                            container: 'body',
-                            selector: 'td.prichina',
-                            url: '/update',
-                            title: 'prichina',
-                            type: 'POST',
-                            value: "Не выбрано",
-                            source:
-                                function () {
-                                    return sor
-                                },
-
-                            validate: function (value) {
-                                if ($.trim(value)) {
-
-                                }
-                            }
-                        });
-                    })
-                });
-
-            });
-
-
-            var dataTable = $('#sample_data').DataTable();
-
-            $('#sample_data').editable({
-                container: 'body',
-                selector: 'td.uchastok',
-                url: '/update',
-                title: 'uchastok',
-                type: 'POST',
-                value: "Не выбрано",
-                source:
-                    [
-
-                        {% for el in uch %}
-                            {value: "{{ el }}", text: "{{ el }}"},
-                        {% endfor %}],
-
-                validate: function (value) {
-                    if ($.trim(value) == '') {
-
-                        return 'This field is required';
                     }
-                }
+
+                    allProstoy = temp.split('%')
+                    sor = [];
+                    for (let n = 0; n < allProstoy.length; n++) {
+                        if (allProstoy[n] !== '') {
+                            sor.push({value: allProstoy[n], text: allProstoy[n]})
+                        }
+
+                    }
+
+                    console.log(sor)
+                    msg = $(this).html();
+
+                    $('#sample_data').editable({
+                        container: 'body',
+                        selector: 'td.prichina',
+                        url: '/update',
+                        title: 'prichina',
+                        type: 'POST',
+                        value: "Не выбрано",
+                        source:
+                            function () {
+                                return sor
+                            },
+
+                        validate: function (value) {
+                            if ($.trim(value)) {
+
+                            }
+                        }
+                    });
+                })
             });
 
-            $('#sample_data').editable({
-                container: 'body',
-                selector: 'td.otv_pod',
-                url: '/update',
-                title: 'otv_pod',
-                type: 'POST',
-                source: [
+        });
 
-                    {% for el in otv_p %}
+
+        var dataTable = $('#sample_data').DataTable();
+
+        $('#sample_data').editable({
+            container: 'body',
+            selector: 'td.uchastok',
+            url: '/update',
+            title: 'uchastok',
+            type: 'POST',
+            value: "Не выбрано",
+            source:
+                [
+
+                    {% for el in uch %}
                         {value: "{{ el }}", text: "{{ el }}"},
-                    {% endfor %}
-                ],
-                validate: function (value) {
-                    if ($.trim(value)) {
+                    {% endfor %}],
 
-                    }
+            validate: function (value) {
+                if ($.trim(value) == '') {
+
+                    return 'This field is required';
+                }
+            }
+        });
+
+        $('#sample_data').editable({
+            container: 'body',
+            selector: 'td.otv_pod',
+            url: '/update',
+            title: 'otv_pod',
+            type: 'POST',
+            source: [
+
+                {% for el in otv_p %}
+                    {value: "{{ el }}", text: "{{ el }}"},
+                {% endfor %}
+            ],
+            validate: function (value) {
+                if ($.trim(value)) {
 
                 }
-            });
 
-            $('#sample_data').editable({
-                container: 'body',
-                selector: 'td.comment',
-                url: '/update',
-                title: 'comment',
-                type: 'POST',
-                value: "Не выбрано",
+            }
+        });
+
+        $('#sample_data').editable({
+            container: 'body',
+            selector: 'td.comment',
+            url: '/update',
+            title: 'comment',
+            type: 'POST',
+            value: "Не выбрано",
 
 
-                validate: function (value) {
-                    if ($.trim(value) == '') {
-                        return 'This field is required';
-                    }
+            validate: function (value) {
+                if ($.trim(value) == '') {
+                    return 'This field is required';
                 }
-            });
+            }
+        });
 
-        })
-        ;
+    })
+    ;
 
 
     </script>
 
 
     <script>//ajax для перезагрузки графика и ли
-        $(document).ready(function () {
-            var Char = null;
-            setInterval(function () {
+    $(document).ready(function () {
+        var Char = null;
+        setInterval(function () {
 
-                $.ajax({
-                    url: 'getData',
-                    method: 'post',
-                    success: function (data) {
+            $.ajax({
+                url: 'getData',
+                method: 'post',
+                success: function (data) {
 
-                        $('#avgSpeeds').html(data.avgSpeed);
-                        $('#allProc').html(data.allProc);
-                        $('#boomOut').html(data.boomOut);
-                        $('#sumProstoy').html(data.sumProstoy);
+                    $('#avgSpeeds').html(data.avgSpeed);
+                    $('#allProc').html(data.allProc);
+                    $('#boomOut').html(data.boomOut);
+                    $('#sumProstoy').html(data.sumProstoy);
 
-                        if (Char != null) {
-                            Char.destroy();
-                        }
-                        ;
 
-                        Char = new Chart("myChart", {
-                            type: 'bar',
-                            data: {
-                                labels: data.lableChart,
-                                datasets: [{
-                                    label: '# Производительность линии 5',
-                                    data: data.dataChart,
-                                    borderWidth: 1
-                                }]
-                            },
-                            options: {
-                                animation: false,
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
-                                    }
+                }
+            });
+
+        }, 2000);
+        setInterval(function () {
+            $.ajax({
+                url: 'getData',
+                method: 'post',
+                success: function (data) {
+
+                    if (Char != null) {
+                        Char.destroy();
+                    }
+                    ;
+
+                    Char = new Chart("myChart", {
+                        type: 'bar',
+                        data: {
+                            labels: data.lableChart,
+                            datasets: [{
+                                label: '# Производительность линии 5',
+                                data: data.dataChart,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            animation: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
                                 }
                             }
-                        });
+                        }
+                    });
 
+                }
+            });
 
-                    }
-                });
+        }, 2000);
 
-
-            }, 1000);
-
-        });
+    });
     </script>
     <script>
-
 
 
     </script>
@@ -225,7 +208,7 @@
     </script>
     <!-- begin new layouot -->
     <div class="col__wrapper"
-         style="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;">
+         style=" display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;  margin-top: 1rem;">
         <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000; ">
             <canvas id="myChart"></canvas>
         </div>
@@ -351,13 +334,7 @@
 </div>
 
 
-<a href="{% url 'otchet' %}">Отчет</a>
-
-
-</div>
-</div>
-
 
 </body>
 
-</html>
+{% endblock %}
