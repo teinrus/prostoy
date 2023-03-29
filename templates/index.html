@@ -1,134 +1,44 @@
 {% extends 'base.html' %}
- <title>Система учета простоев</title>
+
 {% block content %}
+    <head>
+        <title>Отчет простоев линии 5</title>
+    </head>
 
-<body style="padding: 0px 50px; margin-top: 20px;">
-<div class="col-md-6r">
+    <body style="padding: 0px 50px; margin-top: 20px; margin-left: 20px;">
 
-    <script> // зависимости выпадающих списков таблици
-    $(document).ready(function () {
+    <style>
+        .col__list {
+            margin: 0;
+            padding: 0;
+            width: calc((100% - 20px) / 2);
+            display: flex;
+            list-style: none;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
 
-        $(function () {
-            var sor = [];
+        .col__item {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            width: calc((100% - 10px) / 2);
+            outline: 2px solid #000;
+            justify-content: center;
+            align-items: center;
+            font-size: 15px;
+        }
 
-            let allProstoy
-            var test =
-            {{ prich|safe }}
-            var temp = '%'
-            $('#sample_data tr').mouseup(function () {
+        .col__item:nth-child(-n+2) {
+            margin-bottom: 10px;
+        }
 
-                $('td', this).eq(5).each(function () {
-                    temp = '';
-                    for (let i = 0; i < test.length; i++) {
-                        if ($(this).html() === test[i].key) {
-                            temp += test[i].prichina + '%'
-                        }
-                    }
+        .col__item:nth-last-child(-n+2) {
+            margin-bottom: 0px;
+        }
+    </style>
 
-                    allProstoy = temp.split('%')
-                    sor = [];
-                    for (let n = 0; n < allProstoy.length; n++) {
-                        if (allProstoy[n] !== '') {
-                            sor.push({value: allProstoy[n], text: allProstoy[n]})
-                        }
-
-                    }
-
-                    console.log(sor)
-                    msg = $(this).html();
-
-                    $('#sample_data').editable({
-                        container: 'body',
-                        selector: 'td.prichina',
-                        url: '/update',
-                        title: 'prichina',
-                        type: 'POST',
-                        value: "Не выбрано",
-                        source:
-                            function () {
-                                return sor
-                            },
-
-                        validate: function (value) {
-                            if ($.trim(value)) {
-
-                            }
-                        }
-                    });
-                })
-            });
-
-        });
-
-
-        var dataTable = $('#sample_data').DataTable();
-
-        $('#sample_data').editable({
-            container: 'body',
-            selector: 'td.uchastok',
-            url: '/update',
-            title: 'uchastok',
-            type: 'POST',
-            value: "Не выбрано",
-            source:
-                [
-
-                    {% for el in uch %}
-                        {value: "{{ el }}", text: "{{ el }}"},
-                    {% endfor %}],
-
-            validate: function (value) {
-                if ($.trim(value) == '') {
-
-                    return 'This field is required';
-                }
-            }
-        });
-
-        $('#sample_data').editable({
-            container: 'body',
-            selector: 'td.otv_pod',
-            url: '/update',
-            title: 'otv_pod',
-            type: 'POST',
-            source: [
-
-                {% for el in otv_p %}
-                    {value: "{{ el }}", text: "{{ el }}"},
-                {% endfor %}
-            ],
-            validate: function (value) {
-                if ($.trim(value)) {
-
-                }
-
-            }
-        });
-
-        $('#sample_data').editable({
-            container: 'body',
-            selector: 'td.comment',
-            url: '/update',
-            title: 'comment',
-            type: 'POST',
-            value: "Не выбрано",
-
-
-            validate: function (value) {
-                if ($.trim(value) == '') {
-                    return 'This field is required';
-                }
-            }
-        });
-
-    })
-    ;
-
-
-    </script>
-
-
-    <script>//ajax для перезагрузки графика и ли
+    <script>//ajax для перезагрузки графика и ли#}
     $(document).ready(function () {
         var Char = null;
         setInterval(function () {
@@ -184,29 +94,154 @@
 
         }, 2000);
 
+
     });
     </script>
-    <script>
-
-
-    </script>
 
     <script>
+
         $(document).ready(function () {
+            var item_num = $(this).attr('id');
+            update_item(item_num)
             setInterval(function () {
-                $.ajax({
-                    type: 'GET',
-                    url: "", // URL of the server-side script
-                    success: function () {
-                        location.reload();
-                    }
-                });
-            }, 300000); // Refresh the content every 5 seconds
+                var item_num = $(this).attr('id');
+                update_item(item_num);
+            }, 60000);
+
+            function update_item(item_num) {
+                $('#sample_data tbody').html('').load(
+                    "{% url 'update_items' %}?item_num=" + item_num
+                );
+            }
         });
 
 
     </script>
-    <!-- begin new layouot -->
+
+    <script> // зависимости выпадающих списков таблици
+    $(document).ready(function () {
+        var sor = [];
+        let allProstoy
+        var test =
+        {{ prich|safe }}
+        var temp = '%'
+        $(function () {
+
+
+            $('#sample_data').mousemove(function () {
+                $('td.otv_pod', this).mousedown(function () {
+                    {#console.log($(this).text())#}
+                    {##}
+                    {#console.log(sor)#}
+
+                    temp = '';
+                    for (let i = 0; i < test.length; i++) {
+                        if ($(this).text() === test[i].key) {
+                            temp += test[i].prichina + '%'
+                        }
+                    }
+                    allProstoy = temp.split('%')
+                    sor = [];
+                    for (let n = 0; n < allProstoy.length; n++) {
+                        if (allProstoy[n] !== '') {
+                            sor.push({value: allProstoy[n], text: allProstoy[n]})
+                        }
+                    }
+
+
+                })
+            });
+            $('#sample_data').editable({
+                container: 'body',
+                selector: 'td.prichina',
+                url: '/update',
+                title: 'prichina',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    function () {
+                        return sor
+                    },
+
+                validate: function (value) {
+                    if ($.trim(value)) {
+
+                    }
+                }
+            });
+
+        });
+
+
+        var dataTable = $('#sample_data').DataTable();
+
+        $('#sample_data').editable({
+            container: 'body',
+            selector: 'td.uchastok',
+            url: '/update',
+            title: 'uchastok',
+            type: 'POST',
+            value: "Не выбрано",
+            source:
+                [
+                    {% for el in uch %}
+                        {value: "{{ el }}", text: "{{ el }}"},
+                    {% endfor %}],
+            validate: function (value) {
+                if ($.trim(value) == '') {
+                    return 'This field is required';
+                }
+            }
+        });
+
+        $('#sample_data').editable({
+            container: 'body',
+            selector: 'td.otv_pod',
+            url: '/update',
+            title: 'otv_pod',
+            type: 'POST',
+            source: [
+                {% for el in otv_p %}
+                    {value: "{{ el }}", text: "{{ el }}"},
+                {% endfor %}
+            ],
+            validate: function (value) {
+                if ($.trim(value)) {
+                    console.log(value)
+                    for (let i = 0; i < test.length; i++) {
+                        if (value === test[i].key) {
+                            temp += test[i].prichina + '%'
+                        }
+                    }
+                    allProstoy = temp.split('%')
+                    sor = [];
+                    for (let n = 0; n < allProstoy.length; n++) {
+                        if (allProstoy[n] !== '') {
+                            sor.push({value: allProstoy[n], text: allProstoy[n]})
+                        }
+                    }
+                }
+            }
+        });
+
+        $('#sample_data').editable({
+            container: 'body',
+            selector: 'td.comment',
+            url: '/update',
+            title: 'comment',
+            type: 'POST',
+            value: "Не выбрано",
+
+            validate: function (value) {
+                if ($.trim(value) == '') {
+                    return 'This field is required';
+                }
+            }
+        });
+    });
+    </script>
+
+
     <div class="col__wrapper"
          style=" display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;  margin-top: 1rem;">
         <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000; ">
@@ -237,42 +272,8 @@
                 </ul>
         </ul>
     </div>
-    <style>
-        .col__list {
-            margin: 0;
-            padding: 0;
-            width: calc((100% - 20px) / 2);
-            display: flex;
-            list-style: none;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-
-        .col__item {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            width: calc((100% - 10px) / 2);
-            outline: 2px solid #000;
-            justify-content: center;
-            align-items: center;
-            font-size: 15px;
-        }
-
-        .col__item:nth-child(-n+2) {
-            margin-bottom: 10px;
-        }
-
-        .col__item:nth-last-child(-n+2) {
-            margin-bottom: 0px;
-        }
-    </style>
-    <!-- end -->
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
-    <table id="sample_data" class="table table-bordered table-striped">
+    <table id="sample_data" class="table table-bordered table-striped"
+           style="width: calc((100% - 30px)); outline: 2px solid #000; margin-top: 20px;">
         <thead>
         <tr>
             <th>id</th>
@@ -280,61 +281,16 @@
             <th>Время начала простоя</th>
             <th>Время простоя</th>
             <th>Участок</th>
+
             <th>Ответст. подразделение</th>
             <th>Причина</th>
             <th>Комментарий</th>
         </thead>
         <tbody>
-        {% for row in table %}
-            {% if row.prichina == None %}
-                <tr>
-                    <td data-pk="{{ row.id }}">{{ row.id }}</td>
-                    <td data-name="startdata" class="startdata" data-type="text"
-                        data-pk="{{ row.id }}">{{ row.startdata }}</td>
-                    <td data-name="starttime" class="starttime" data-type="text"
-                        data-pk="{{ row.id }}">{{ row.starttime }}</td>
-                    <td data-name="prostoy" class="prostoy" data-type="text" data-pk="{{ row.id }}">{{ row.prostoy }}
-                    </td>
-                    <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select" data-pk="{{ row.id }}">
-                        {{ row.uchastok }}</td>
-
-                    <td data-name="otv_pod" class="otv_pod" data-type="select" data-pk="{{ row.id }}">{{ row.otv_pod }}
-                    </td>
-
-                    <td data-name="prichina" class="prichina" data-type="select"
-                        data-pk="{{ row.id }}">{{ row.prichina }}</td>
-                    <td data-name="comment" class="comment" data-type="text" data-pk="{{ row.id }}">{{ row.comment }}
-                    </td>
-                </tr>
-            {% endif %}
-        {% endfor %}
-
+        {% include 'table_body.html' %}
         </tbody>
-
     </table>
 
-    {#    <table id="sample_data2" class="table table-bordered table-striped">#}
-    {#        <thead>#}
-    {#        <tr>#}
-    {#            <th>id</th>#}
-    {#            <th>Дата</th>#}
-    {#            <th>Время начала простоя</th>#}
-    {#            <th>Время простоя</th>#}
-    {#            <th>Участок</th>#}
-    {#            <th>Ответст. подразделение</th>#}
-    {#            <th>Причина</th>#}
-    {#            <th>Комментарий</th>#}
-    {#        </thead>#}
-    {#        <tbody>#}
-    {#        </tbody>#}
-    {##}
-    {#    </table>#}
 
-
-</div>
-
-
-
-</body>
-
+    </body>
 {% endblock %}

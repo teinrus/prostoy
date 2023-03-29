@@ -31,12 +31,9 @@ def index(request):
             speed = speed5.objects.filter(data=datetime.date.today(),
                                           time__gte=datetime.time(8),
                                           time__lte=datetime.time(16, 30))
-            boom = bottleExplosion.objects.filter(data=datetime.date.today(),
-                                                  time__gte=datetime.time(8),
-                                                  time__lte=datetime.time(16, 30))
+
 
         elif end1 <= datetime.datetime.now().time() <= end2:
-
 
             table = Table5.objects.filter(startdata=datetime.date.today(),
                                           starttime__gte=datetime.time(16, 29),
@@ -44,9 +41,7 @@ def index(request):
             speed = speed5.objects.filter(data=datetime.date.today(),
                                           time__gte=datetime.time(16, 29),
                                           time__lte=datetime.time(23, 59))
-            boom = bottleExplosion.objects.filter(data=datetime.date.today(),
-                                                  time__gte=datetime.time(16, 29),
-                                                  time__lte=datetime.time(23, 59))
+
         else:
 
             table = Table5.objects.filter(startdata=datetime.date.today(),
@@ -55,10 +50,6 @@ def index(request):
             speed = speed5.objects.filter(data=datetime.date.today(),
                                           time__gte=datetime.time(00, 00),
                                           time__lte=datetime.time(8, 0))
-            boom = bottleExplosion.objects.filter(data=datetime.date.today(),
-                                                  time__gte=datetime.time(16, 29),
-                                                  time__lte=datetime.time(23, 59))
-
 
     otv_p = otv_pod.objects.all()
 
@@ -68,8 +59,6 @@ def index(request):
     return render(request, "index.html", {
         'table': table,
         'speed': speed,
-
-
 
         'otv_p': otv_p,
         'prich': prich,
@@ -194,8 +183,54 @@ def otchet(request):
     })
 
 
-def getData(requst):
+def update_items(request):
 
+    if start1 <= datetime.datetime.now().time() <= end1:
+
+
+        table5 = Table5.objects.filter(startdata=datetime.date.today(),
+                                      starttime__gte=datetime.time(8),
+                                      starttime__lte=datetime.time(16, 30))
+
+
+    elif end1 <= datetime.datetime.now().time() <= end2:
+
+
+        table5 = Table5.objects.filter(startdata=datetime.date.today(),
+                                      starttime__gte=datetime.time(16, 29),
+                                      starttime__lte=datetime.time(23, 59))
+
+    else:
+
+        table5 = Table5.objects.filter(startdata=datetime.date.today(),
+                                      starttime__gte=datetime.time(00, 00),
+                                      starttime__lte=datetime.time(8, 0))
+
+
+    list = []
+    for table in table5:
+        table_info = {
+            'id': table.id,
+            'startdata': table.startdata,
+            'starttime': table.starttime,
+            'prostoy': table.prostoy,
+
+            'uchastok': table.uchastok,
+            'otv_pod': table.otv_pod,
+            'prichina': table.prichina,
+            'comment': table.comment,
+        }
+        list.append(table_info)
+
+    table_dic = {}
+    table_dic['data'] = list
+
+
+    return render(request, 'table_body.html', {'table5':table5})
+
+
+
+def getData(requst):
     if start1 <= datetime.datetime.now().time() <= end1:
 
         plan = 31500
@@ -233,9 +268,6 @@ def getData(requst):
                                               time__gte=datetime.time(16, 29),
                                               time__lte=datetime.time(8, 0))
 
-
-
-
     try:
         avgSpeed = round(speed.aggregate(Avg('speed')).get('speed__avg'), 2)
     except:
@@ -265,13 +297,13 @@ def getData(requst):
         lableChart.append(str(sp.time))
         dataChart.append(sp.speed)
 
-
     result = {"allProc": allProc,
               "boomOut": boomOut,
-              'sumProstoy':str(sumProstoy),
-              'avgSpeed':avgSpeed,
-              'lableChart':lableChart,
-              'dataChart':dataChart,
+              'sumProstoy': str(sumProstoy),
+              'avgSpeed': avgSpeed,
+              'lableChart': lableChart,
+              'dataChart': dataChart,
+
               }
     return JsonResponse(result)
 
