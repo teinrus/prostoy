@@ -10,18 +10,22 @@ from prostoy.models import *
 from .forms import Otchet
 
 start1 = datetime.time(8, 00, 0)
-end1 = datetime.time(16, 30, 0)
-end2 = datetime.time(23, 59, 0)
+start2 = datetime.time(16, 30, 0)
+start3 = datetime.time(23, 59, 0)
 
-if start1 <= datetime.datetime.now().time() <= end1:
+
+if start1 <= datetime.datetime.now().time() <= start2:
     startSmena = datetime.time(8, 00, 0)
-    spotSmena = end1 = datetime.time(16, 30, 0)
-elif end1 <= datetime.datetime.now().time() <= end2:
+    spotSmena =datetime.time(16, 30, 0)
+elif start2 <= datetime.datetime.now().time() <= start3:
     startSmena = datetime.time(16, 30, 0)
-    spotSmena = end1 = datetime.time(23, 59, 0)
+    spotSmena =  datetime.time(23, 59, 0)
 else:
     startSmena = datetime.time(00, 00, 00)
-    spotSmena = end1 = datetime.time(8, 00, 00)
+    spotSmena =  datetime.time(8, 00, 00)
+
+
+
 
 
 def proc(startSmena, spotSmena, plan, colProduct):
@@ -88,7 +92,7 @@ def otchet(request):
                                                           time__gte=datetime.time(0),
                                                           time__lte=datetime.time(23, 59))
                 if form.cleaned_data["SmenaF"] == 'Smena 1':
-                    table = Table5.objects.filter(starttime__gte=datetime.time(8),
+                    table = Table5.objects.filter(starttime__gte=startSmena,
                                                   starttime__lte=datetime.time(16, 30),
                                                   startdata__gte=form.cleaned_data["start_data"],
                                                   startdata__lte=form.cleaned_data["finish_data"]
@@ -162,7 +166,6 @@ def otchet(request):
     except:
         allProc = 0
 
-    print(allProc)
 
 
     otv_p = otv_pod.objects.all()
@@ -192,24 +195,10 @@ def otchet(request):
 
 
 def update_items(request):
-    if start1 <= datetime.datetime.now().time() <= end1:
 
-        table5 = Table5.objects.filter(startdata=datetime.date.today(),
-                                       starttime__gte=datetime.time(8),
-                                       starttime__lte=datetime.time(16, 30))
-
-
-    elif end1 <= datetime.datetime.now().time() <= end2:
-
-        table5 = Table5.objects.filter(startdata=datetime.date.today(),
-                                       starttime__gte=datetime.time(16, 29),
-                                       starttime__lte=datetime.time(23, 59))
-
-    else:
-
-        table5 = Table5.objects.filter(startdata=datetime.date.today(),
-                                       starttime__gte=datetime.time(00, 00),
-                                       starttime__lte=datetime.time(8, 0))
+    table5 = Table5.objects.filter(startdata=datetime.date.today(),
+                                   starttime__gte=startSmena,
+                                   starttime__lte=spotSmena)
 
     list = []
     for table in table5:
@@ -236,6 +225,18 @@ def getData(requst):
 
     plan = 31500
 
+    if start1 <= datetime.datetime.now().time() <= start2:
+        startSmena = datetime.time(8, 00, 0)
+        spotSmena = datetime.time(16, 30, 0)
+    elif start2 <= datetime.datetime.now().time() <= start3:
+        startSmena = datetime.time(16, 30, 0)
+        spotSmena = datetime.time(23, 59, 0)
+    else:
+        startSmena = datetime.time(00, 00, 00)
+        spotSmena = datetime.time(8, 00, 00)
+
+
+
     table = Table5.objects.filter(startdata=datetime.date.today(),
                                   starttime__gte=startSmena,
                                   starttime__lte=spotSmena)
@@ -259,10 +260,10 @@ def getData(requst):
     except:
         sumProstoy = '00:00'
     try:
-        Proc = round((round(speed.aggregate(Sum('speed')).get('speed__sum') / 20, 2)))
-        allProc=proc(start1, end1, plan, Proc),
+        product = round((round(speed.aggregate(Sum('speed')).get('speed__sum') / 20, 2)))
+        allProc=proc(startSmena, spotSmena, plan, product),
     except:
-        Proc = 0
+        product = 0
         allProc=0
     try:
         boomOut = boom.aggregate(Sum('bottle')).get('bottle__sum')
@@ -277,7 +278,7 @@ def getData(requst):
     for sp in speed:
         lableChart.append(str(sp.time))
         dataChart.append(sp.speed)
-    print(allProc)
+
     result = {"allProc": allProc,
               "boomOut": boomOut,
               'sumProstoy': str(sumProstoy),
