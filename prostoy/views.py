@@ -9,47 +9,46 @@ from prostoy.models import *
 
 from .forms import Otchet
 
-
-def time_in_range(start, end, current):
-    return start < current < end
-
-
 start1 = datetime.time(8, 00, 0)
 end1 = datetime.time(16, 30, 0)
 end2 = datetime.time(23, 59, 0)
-current = datetime.datetime.now().time()
+
+if start1 <= datetime.datetime.now().time() <= end1:
+    startSmena = datetime.time(8, 00, 0)
+    spotSmena = end1 = datetime.time(16, 30, 0)
+elif end1 <= datetime.datetime.now().time() <= end2:
+    startSmena = datetime.time(16, 30, 0)
+    spotSmena = end1 = datetime.time(23, 59, 0)
+else:
+    startSmena = datetime.time(00, 00, 00)
+    spotSmena = end1 = datetime.time(8, 00, 00)
+
+
+def proc(startSmena, spotSmena, plan, colProduct):
+    today = datetime.date.today()
+    # количество продукции вып в сек
+    d_start1 = datetime.datetime.combine(today, startSmena)
+    d_end1 = datetime.datetime.combine(today, spotSmena)
+    diff1 = d_end1 - d_start1
+    planProdSec = int(plan / int(diff1.total_seconds()))
+
+    # количество времени которое прошло
+    d_start2 = datetime.datetime.combine(today, startSmena)
+    d_end2 = datetime.datetime.combine(today, datetime.datetime.now().time())
+    diff2 = d_end2 - d_start2
+
+    # проц вып продукции
+    return int(colProduct / ((int(diff2.total_seconds()) * planProdSec) / 100))
 
 
 def index(request):
     if request.method == 'GET':
-
-        if start1 <= datetime.datetime.now().time() <= end1:
-
-            table = Table5.objects.filter(startdata=datetime.date.today(),
-                                          starttime__gte=datetime.time(8),
-                                          starttime__lte=datetime.time(16, 30))
-            speed = speed5.objects.filter(data=datetime.date.today(),
-                                          time__gte=datetime.time(8),
-                                          time__lte=datetime.time(16, 30))
-
-
-        elif end1 <= datetime.datetime.now().time() <= end2:
-
-            table = Table5.objects.filter(startdata=datetime.date.today(),
-                                          starttime__gte=datetime.time(16, 29),
-                                          starttime__lte=datetime.time(23, 59))
-            speed = speed5.objects.filter(data=datetime.date.today(),
-                                          time__gte=datetime.time(16, 29),
-                                          time__lte=datetime.time(23, 59))
-
-        else:
-
-            table = Table5.objects.filter(startdata=datetime.date.today(),
-                                          starttime__gte=datetime.time(00, 00),
-                                          starttime__lte=datetime.time(8, 0))
-            speed = speed5.objects.filter(data=datetime.date.today(),
-                                          time__gte=datetime.time(00, 00),
-                                          time__lte=datetime.time(8, 0))
+        table = Table5.objects.filter(startdata=datetime.date.today(),
+                                      starttime__gte=startSmena,
+                                      starttime__lte=spotSmena)
+        speed = speed5.objects.filter(data=datetime.date.today(),
+                                      time__gte=startSmena,
+                                      time__lte=spotSmena)
 
     otv_p = otv_pod.objects.all()
 
@@ -158,11 +157,19 @@ def otchet(request):
         lableChart = []
         dataChart = []
 
+    try:
+        allProc = round((round(speed.aggregate(Sum('speed')).get('speed__sum') / 20, 2)))
+    except:
+        allProc = 0
+
+    print(allProc)
+
+
     otv_p = otv_pod.objects.all()
     uch = uchastok.objects.all()
     prich = prichina.objects.all()
 
-    test = prichina.objects.all()
+
     return render(request, "otchet.html", {
         'table': table,
         'form': form,
@@ -170,6 +177,7 @@ def otchet(request):
         'sumProstoy': sumProstoy,
         'avgSpeed': avgSpeed,
         'boomOut': boomOut,
+        'allProc':allProc,
 
         'lableChart': lableChart,
         'dataChart': dataChart,
@@ -178,34 +186,30 @@ def otchet(request):
         'prich': prich,
         'uch': uch,
 
-        'test': test,
+
 
     })
 
 
 def update_items(request):
-
     if start1 <= datetime.datetime.now().time() <= end1:
 
-
         table5 = Table5.objects.filter(startdata=datetime.date.today(),
-                                      starttime__gte=datetime.time(8),
-                                      starttime__lte=datetime.time(16, 30))
+                                       starttime__gte=datetime.time(8),
+                                       starttime__lte=datetime.time(16, 30))
 
 
     elif end1 <= datetime.datetime.now().time() <= end2:
 
-
         table5 = Table5.objects.filter(startdata=datetime.date.today(),
-                                      starttime__gte=datetime.time(16, 29),
-                                      starttime__lte=datetime.time(23, 59))
+                                       starttime__gte=datetime.time(16, 29),
+                                       starttime__lte=datetime.time(23, 59))
 
     else:
 
         table5 = Table5.objects.filter(startdata=datetime.date.today(),
-                                      starttime__gte=datetime.time(00, 00),
-                                      starttime__lte=datetime.time(8, 0))
-
+                                       starttime__gte=datetime.time(00, 00),
+                                       starttime__lte=datetime.time(8, 0))
 
     list = []
     for table in table5:
@@ -225,48 +229,23 @@ def update_items(request):
     table_dic = {}
     table_dic['data'] = list
 
-
-    return render(request, 'table_body.html', {'table5':table5})
-
+    return render(request, 'table_body.html', {'table5': table5})
 
 
 def getData(requst):
-    if start1 <= datetime.datetime.now().time() <= end1:
 
-        plan = 31500
-        table = Table5.objects.filter(startdata=datetime.date.today(),
-                                      starttime__gte=datetime.time(8),
-                                      starttime__lte=datetime.time(16, 30))
-        speed = speed5.objects.filter(data=datetime.date.today(),
-                                      time__gte=datetime.time(8),
-                                      time__lte=datetime.time(16, 30))
-        boom = bottleExplosion.objects.filter(data=datetime.date.today(),
-                                              time__gte=datetime.time(8),
-                                              time__lte=datetime.time(16, 30))
+    plan = 31500
 
-    elif end1 <= datetime.datetime.now().time() <= end2:
+    table = Table5.objects.filter(startdata=datetime.date.today(),
+                                  starttime__gte=startSmena,
+                                  starttime__lte=spotSmena)
+    speed = speed5.objects.filter(data=datetime.date.today(),
+                                  time__gte=startSmena,
+                                  time__lte=spotSmena)
+    boom = bottleExplosion.objects.filter(data=datetime.date.today(),
+                                          time__gte=startSmena,
+                                          time__lte=spotSmena)
 
-        plan = 27000
-        table = Table5.objects.filter(startdata=datetime.date.today(),
-                                      starttime__gte=datetime.time(16, 29),
-                                      starttime__lte=datetime.time(23, 59))
-        speed = speed5.objects.filter(data=datetime.date.today(),
-                                      time__gte=datetime.time(16, 29),
-                                      time__lte=datetime.time(23, 59))
-        boom = bottleExplosion.objects.filter(data=datetime.date.today(),
-                                              time__gte=datetime.time(16, 29),
-                                              time__lte=datetime.time(23, 59))
-    else:
-        plan = 29000
-        table = Table5.objects.filter(startdata=datetime.date.today(),
-                                      starttime__gte=datetime.time(00, 00),
-                                      starttime__lte=datetime.time(8, 0))
-        speed = speed5.objects.filter(data=datetime.date.today(),
-                                      time__gte=datetime.time(00, 00),
-                                      time__lte=datetime.time(8, 0))
-        boom = bottleExplosion.objects.filter(data=datetime.date.today(),
-                                              time__gte=datetime.time(16, 29),
-                                              time__lte=datetime.time(8, 0))
 
     try:
         avgSpeed = round(speed.aggregate(Avg('speed')).get('speed__avg'), 2)
@@ -280,9 +259,11 @@ def getData(requst):
     except:
         sumProstoy = '00:00'
     try:
-        allProc = round((round(speed.aggregate(Sum('speed')).get('speed__sum') / 20, 2)) / plan * 100, 2)
+        Proc = round((round(speed.aggregate(Sum('speed')).get('speed__sum') / 20, 2)))
+        allProc=proc(start1, end1, plan, Proc),
     except:
-        allProc = 0
+        Proc = 0
+        allProc=0
     try:
         boomOut = boom.aggregate(Sum('bottle')).get('bottle__sum')
         if (boomOut == None):
@@ -296,7 +277,7 @@ def getData(requst):
     for sp in speed:
         lableChart.append(str(sp.time))
         dataChart.append(sp.speed)
-
+    print(allProc)
     result = {"allProc": allProc,
               "boomOut": boomOut,
               'sumProstoy': str(sumProstoy),

@@ -41,6 +41,19 @@
     <script>//ajax для перезагрузки графика и ли#}
     $(document).ready(function () {
         var Char = null;
+         $.ajax({
+                url: 'getData',
+                method: 'post',
+                success: function (data) {
+
+                    $('#avgSpeeds').html(data.avgSpeed);
+                    $('#allProc').html(data.allProc);
+                    $('#boomOut').html(data.boomOut);
+                    $('#sumProstoy').html(data.sumProstoy);
+
+
+                }
+            });
         setInterval(function () {
 
             $.ajax({
@@ -57,7 +70,39 @@
                 }
             });
 
-        }, 2000);
+        }, 3000);
+        $.ajax({
+                url: 'getData',
+                method: 'post',
+                success: function (data) {
+
+                    if (Char != null) {
+                        Char.destroy();
+                    }
+                    ;
+
+                    Char = new Chart("myChart", {
+                        type: 'bar',
+                        data: {
+                            labels: data.lableChart,
+                            datasets: [{
+                                label: '# Производительность линии 5',
+                                data: data.dataChart,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            animation: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+
+                }
+            });
         setInterval(function () {
             $.ajax({
                 url: 'getData',
@@ -111,7 +156,7 @@
             function update_item(item_num) {
                 $('#sample_data tbody').html('').load(
                     "{% url 'update_items' %}?item_num=" + item_num
-                );
+                ).sort();
             }
         });
 
@@ -130,9 +175,6 @@
 
             $('#sample_data').mousemove(function () {
                 $('td.otv_pod', this).mousedown(function () {
-                    {#console.log($(this).text())#}
-                    {##}
-                    {#console.log(sor)#}
 
                     temp = '';
                     for (let i = 0; i < test.length; i++) {
@@ -147,8 +189,6 @@
                             sor.push({value: allProstoy[n], text: allProstoy[n]})
                         }
                     }
-
-
                 })
             });
             $('#sample_data').editable({
@@ -162,16 +202,12 @@
                     function () {
                         return sor
                     },
-
                 validate: function (value) {
                     if ($.trim(value)) {
-
                     }
                 }
             });
-
         });
-
 
         var dataTable = $('#sample_data').DataTable();
 
@@ -290,7 +326,5 @@
         {% include 'table_body.html' %}
         </tbody>
     </table>
-
-
     </body>
 {% endblock %}

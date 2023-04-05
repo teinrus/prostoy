@@ -4,7 +4,7 @@
 
 
 {% for row in table5 %}
-    {#    {% if row.prichina == None %}#}
+        {% if row.prichina == None %}
     <tr>
         <td data-pk="{{ row.id }}">{{ row.id }}</td>
         <td data-name="startdata" class="startdata" data-type="text"
@@ -23,7 +23,7 @@
         <td data-name="comment" class="comment" data-type="text" data-pk="{{ row.id }}">{{ row.comment }}
         </td>
     </tr>
-    {#    {% endif %}#}
+        {% endif %}
 {% endfor %}
 
 {% endblock %}
