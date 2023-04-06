@@ -178,8 +178,16 @@
 
 
 <footer  class="not-print">
-   <h4><a media="print" href="{% url 'home' %}">Главная</a></h4>
-    <h4><a href="{% url 'otchet' %}">Отчет</a></h4>
+    <ul>
+        <li>
+             <h4><a media="print" href="{% url 'home' %}">Главная</a></h4>
+        </li>
+        <li>
+             <h4><a href="{% url 'otchet' %}">Отчет</a></h4>
+        </li>
+
+    </ul>
+
 </footer>
 
 {% block content %}

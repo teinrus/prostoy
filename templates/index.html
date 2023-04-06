@@ -149,14 +149,22 @@
             var item_num = $(this).attr('id');
             update_item(item_num)
             setInterval(function () {
-                var item_num = $(this).attr('id');
-                update_item(item_num);
-            }, 60000);
+                if ($(".popover-title").is(':visible')){
+                    console.log('da')
+
+                }else {
+                   console.log('net')
+                    var item_num = $(this).attr('id');
+                    update_item(item_num);
+                }
+
+            },2000);
 
             function update_item(item_num) {
-                $('#sample_data tbody').html('').load(
+                $('#sample_data tbody').load(
                     "{% url 'update_items' %}?item_num=" + item_num
                 ).sort();
+
             }
         });
 
