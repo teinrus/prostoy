@@ -8,74 +8,7 @@
 <body style="padding: 0px 50px; margin-top: 20px;">
 
 
-<script>
-    $(document).ready(function () {
-        var dataTable = $('#sample_data').DataTable()
-        $('#sample_data').editable({
-            container: 'body',
-            selector: 'td.uchastok',
-            url: '/update',
-            title: 'uchastok',
-            type: 'POST',
-            value: "Не выбрано",
-            source:
-                [
 
-                    {% for el in uch %}
-                        {value: "{{ el }}", text: "{{ el }}"},
-                    {% endfor %}],
-
-            validate: function (value) {
-                if ($.trim(value) == '') {
-
-                    return 'This field is required';
-                }
-            }
-        });
-
-
-        $('#sample_data').editable({
-            container: 'body',
-            selector: 'td.otv_pod',
-            url: '/update',
-            title: 'otv_pod',
-            type: 'POST',
-            source: [
-
-                {% for el in otv_p %}
-                    {value: "{{ el }}", text: "{{ el }}"},
-                {% endfor %}
-            ],
-            validate: function (value) {
-                if ($.trim(value)) {
-
-                }
-
-            }
-        });
-        $('#sample_data').editable({
-            container: 'body',
-            selector: 'td.prichina',
-            url: '/update',
-            title: 'prichina',
-            type: 'POST',
-            value: "Не выбрано",
-            source: [
-                {% for el in prich %}
-                    {value: "{{ el }}", text: "{{ el }}"},
-                {% endfor %}
-            ],
-
-
-            validate: function (value) {
-                if ($.trim(value)) {
-
-                }
-            }
-        });
-    })
-    ;
-</script>
 
 
 <h4 media="print-v" style="visibility: hidden">Общее время простоя {{ sumProstoy }}</h4>

@@ -1,4 +1,6 @@
 import datetime
+
+from django.contrib.auth.views import LoginView
 from django.template import loader
 
 from django.db.models import Count, Sum, Avg
@@ -23,6 +25,7 @@ elif start2 <= datetime.datetime.now().time() <= start3:
 else:
     startSmena = datetime.time(00, 00, 00)
     spotSmena =  datetime.time(8, 00, 00)
+
 
 
 
@@ -92,7 +95,7 @@ def otchet(request):
                                                           time__gte=datetime.time(0),
                                                           time__lte=datetime.time(23, 59))
                 if form.cleaned_data["SmenaF"] == 'Smena 1':
-                    table = Table5.objects.filter(starttime__gte=startSmena,
+                    table = Table5.objects.filter(starttime__gte=datetime.time(8),
                                                   starttime__lte=datetime.time(16, 30),
                                                   startdata__gte=form.cleaned_data["start_data"],
                                                   startdata__lte=form.cleaned_data["finish_data"]
@@ -170,7 +173,7 @@ def otchet(request):
 
     otv_p = otv_pod.objects.all()
     uch = uchastok.objects.all()
-    prich = prichina.objects.all()
+    prich = list(prichina.objects.all().values())
 
 
     return render(request, "otchet.html", {
