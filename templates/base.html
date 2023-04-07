@@ -47,6 +47,10 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css"
           rel="stylesheet">
+
+
+
+
     <script
             src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.js"></script>
 
@@ -60,7 +64,7 @@
 
 <body>
 
-    {% if request.user.is_authenticated and request.user.is_staff %}
+{% if request.user.is_authenticated and request.user.is_staff %}
     <script> // зависимости выпадающих списков таблици
     $(document).ready(function () {
         var sor = [];
@@ -174,17 +178,21 @@
         });
     });
     </script>
-    {% endif %}
+{% endif %}
 
 
-<footer  class="not-print">
-    <ul>
+<footer class="not-print">
+    <ul class="ul-bar" >
         <li>
-             <h4><a media="print" href="{% url 'home' %}">Главная</a></h4>
+            <h4><a href="{% url 'home' %}">Главная</a></h4>
         </li>
         <li>
-             <h4><a href="{% url 'otchet' %}">Отчет</a></h4>
+            <h4><a href="{% url 'otchet' %}">Отчет</a></h4>
         </li>
+        <li>
+            <h4><a href="{% url 'profile' %}">Войти</a></h4>
+        </li>
+
 
     </ul>
 
@@ -194,11 +202,31 @@
 {% endblock %}
 </body>
 <style>
-    footer h4 {
-        display: inline;
-        padding: 1rem;
-        margin-bottom: 1rem;
+    .table table-bordered table-striped {
+        width: calc((100%));
+        outline: 2px solid #000;
+        margin-top: 20px;
+
     }
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+    .ul-bar{
+       margin: 0;
+        display: flex;
+    }
+    .ul-bar li {
+        padding: 5px;
+    }
+    .ul-bar > li:last-child
+    {
+    right:5%;
+    position:absolute
+   }
+
+
+
 </style>
 
 </html>

@@ -198,6 +198,15 @@ def otchet(request):
 
 
 def update_items(request):
+    if start1 <= datetime.datetime.now().time() <= start2:
+        startSmena = datetime.time(8, 00, 0)
+        spotSmena = datetime.time(16, 30, 0)
+    elif start2 <= datetime.datetime.now().time() <= start3:
+        startSmena = datetime.time(16, 30, 0)
+        spotSmena = datetime.time(23, 59, 0)
+    else:
+        startSmena = datetime.time(00, 00, 00)
+        spotSmena = datetime.time(8, 00, 00)
 
     table5 = Table5.objects.filter(startdata=datetime.date.today(),
                                    starttime__gte=startSmena,
@@ -335,3 +344,7 @@ def update(request):
                 a.save()
 
     return HttpResponse('yes')
+
+
+def profile_view(request):
+    return render(request,'profile.html')

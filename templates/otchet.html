@@ -5,14 +5,7 @@
 <title>Отчет простоев линии 5</title>
 </head>
 
-<body style="padding: 0px 50px; margin-top: 20px;">
-
-
-
-
-
-<h4 media="print-v" style="visibility: hidden">Общее время простоя {{ sumProstoy }}</h4>
-
+<body style="padding: 0px 50px; margin-top: 5px;">
 
 <h4>Общее время простоя {{ sumProstoy }}</h4>
 <h4>Средняя скорость {{ avgSpeed }} </h4>
@@ -51,8 +44,7 @@
 
 </div>
 
-<table id="sample_data" class="table table-bordered table-striped"
-       style="width: calc((100% - 30px)); outline: 2px solid #000; margin-top: 20px;">
+<table id="sample_data" class="table table-bordered table-striped">
     <thead>
     <tr>
         <th>Дата</th>
@@ -79,7 +71,8 @@
             <td data-name="prichina" class="prichina" data-type="select"
                 data-pk="{{ row.id }}">{{ row.prichina }}</td>
 
-            <td>{{ row.comment }}</td>
+            <td data-name="comment" class="comment" data-type="text" data-pk="{{ row.id }}">{{ row.comment }}
+        </td>
         </tr>
     {% endfor %}
     </tbody>
@@ -146,10 +139,7 @@
 </script>
 
 <style>
-    ul {
-        list-style: none;
-        padding: 0;
-    }
+
 
     .col__list {
         margin: 0;
