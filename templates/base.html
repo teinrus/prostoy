@@ -49,8 +49,6 @@
           rel="stylesheet">
 
 
-
-
     <script
             src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.js"></script>
 
@@ -182,15 +180,27 @@
 
 
 <footer class="not-print">
-    <ul class="ul-bar" >
+    <ul class="ul-bar">
         <li>
-            <h4><a href="{% url 'home' %}">Главная</a></h4>
+            <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'home' %}'">
+                Главная
+            </button>
         </li>
         <li>
-            <h4><a href="{% url 'otchet' %}">Отчет</a></h4>
+            <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'otchet' %}'">
+                Отчет
+            </button>
         </li>
         <li>
-            <h4><a href="{% url 'profile' %}">Войти</a></h4>
+                        {% if user.is_authenticated %}
+                            <button class="btn btn-sm btn-primary w-100 ml-2"
+                                    onclick="location.href='{% url 'logOut' %}'">{{ user.username }}|Выйти</button>
+                        {% else %}
+                            <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'logIn' %}?next=/'">
+                                Авторизация
+                            </button>
+                        {% endif %}
+
         </li>
 
 
@@ -202,29 +212,36 @@
 {% endblock %}
 </body>
 <style>
+
+
+
+
+
     .table table-bordered table-striped {
         width: calc((100%));
         outline: 2px solid #000;
         margin-top: 20px;
 
     }
+
     ul {
         list-style: none;
         padding: 0;
     }
-    .ul-bar{
-       margin: 0;
+
+    .ul-bar {
+        margin: 0;
         display: flex;
     }
+
     .ul-bar li {
         padding: 5px;
     }
-    .ul-bar > li:last-child
-    {
-    right:5%;
-    position:absolute
-   }
 
+    .ul-bar > li:last-child {
+        right: 5%;
+        position: absolute
+    }
 
 
 </style>
