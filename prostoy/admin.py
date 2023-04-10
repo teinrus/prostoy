@@ -11,3 +11,5 @@ admin.site.register(prichina)
 admin.site.register(uchastok)
 
 admin.site.register(bottleExplosion)
+
+admin.site.register(bottling_plan)

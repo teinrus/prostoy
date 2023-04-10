@@ -10,19 +10,19 @@
     <script>//ajax для перезагрузки графика и ли#}
     $(document).ready(function () {
         var Char = null;
-         $.ajax({
-                url: 'getData',
-                method: 'post',
-                success: function (data) {
+        $.ajax({
+            url: 'getData',
+            method: 'post',
+            success: function (data) {
 
-                    $('#avgSpeeds').html(data.avgSpeed);
-                    $('#allProc').html(data.allProc);
-                    $('#boomOut').html(data.boomOut);
-                    $('#sumProstoy').html(data.sumProstoy);
+                $('#avgSpeeds').html(data.avgSpeed);
+                $('#allProc').html(data.allProc);
+                $('#boomOut').html(data.boomOut);
+                $('#sumProstoy').html(data.sumProstoy);
 
 
-                }
-            });
+            }
+        });
         setInterval(function () {
 
             $.ajax({
@@ -41,37 +41,37 @@
 
         }, 3000);
         $.ajax({
-                url: 'getData',
-                method: 'post',
-                success: function (data) {
+            url: 'getData',
+            method: 'post',
+            success: function (data) {
 
-                    if (Char != null) {
-                        Char.destroy();
-                    }
-                    ;
+                if (Char != null) {
+                    Char.destroy();
+                }
+                ;
 
-                    Char = new Chart("myChart", {
-                        type: 'bar',
-                        data: {
-                            labels: data.lableChart,
-                            datasets: [{
-                                label: '# Производительность линии 5',
-                                data: data.dataChart,
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            animation: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
+                Char = new Chart("myChart", {
+                    type: 'bar',
+                    data: {
+                        labels: data.lableChart,
+                        datasets: [{
+                            label: '# Производительность линии 5',
+                            data: data.dataChart,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        animation: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
                             }
                         }
-                    });
+                    }
+                });
 
-                }
-            });
+            }
+        });
         setInterval(function () {
             $.ajax({
                 url: 'getData',
@@ -118,23 +118,24 @@
             var item_num = $(this).attr('id');
             update_item(item_num)
             setInterval(function () {
-                if ($(".popover-title").is(':visible')){
-                    console.log('da')
+                if (!$(".popover-title").is(':visible')) {
 
-                }else {
-                   console.log('net')
                     var item_num = $(this).attr('id');
                     update_item(item_num);
+
                 }
 
-            },150000);
+            }, 150000);
 
             function update_item(item_num) {
                 $('#sample_data tbody').load(
                     "{% url 'update_items' %}?item_num=" + item_num
                 ).sort();
 
+
             }
+
+
         });
 
 
@@ -150,7 +151,8 @@
             <li class="col__item">
                 <ul>
                     <li style="text-align: center;font-size:23px">Средняя производительность линии</li>
-                    <li id="avgSpeeds" style="text-align: center; font-size:70px; list-style-type: none;">{{ avgSpeed }}</li>
+                    <li id="avgSpeeds"
+                        style="text-align: center; font-size:70px; list-style-type: none;">{{ avgSpeed }}</li>
                 </ul>
             </li>
             <li class="col__item">

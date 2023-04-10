@@ -2,7 +2,6 @@
 {% block content %}
 
 
-
 {% for row in table5 %}
         {% if row.prichina == None %}
     <tr>
@@ -12,8 +11,8 @@
         <td data-name="starttime" class="starttime" data-type="text"
             data-pk="{{ row.id }}">{{ row.starttime }}</td>
 
-        <td data-name="prostoy" class="prostoy" data-type="text" data-pk="{{ row.id }}">{{ row.prostoy }}
-        </td>
+        <td data-name="prostoy" class="prostoy" data-type="text" data-pk="{{ row.id }}">{{ row.prostoy}}</td>
+
         <td data-name="uchastok" name="uchastok" class="uchastok" data-type="select" data-pk="{{ row.id }}">
             {{ row.uchastok }}</td>
         <td data-name="otv_pod" class="otv_pod" data-type="select" data-pk="{{ row.id }}">{{ row.otv_pod }}
@@ -27,3 +26,4 @@
 {% endfor %}
 
 {% endblock %}
+

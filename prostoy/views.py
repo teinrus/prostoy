@@ -3,7 +3,6 @@ import datetime
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
-
 from django.db.models import Count, Sum, Avg
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -12,24 +11,22 @@ from prostoy.models import *
 
 from .forms import Otchet
 
+
+
+
 start1 = datetime.time(8, 00, 0)
 start2 = datetime.time(16, 30, 0)
 start3 = datetime.time(23, 59, 0)
 
-
 if start1 <= datetime.datetime.now().time() <= start2:
     startSmena = datetime.time(8, 00, 0)
-    spotSmena =datetime.time(16, 30, 0)
+    spotSmena = datetime.time(16, 30, 0)
 elif start2 <= datetime.datetime.now().time() <= start3:
     startSmena = datetime.time(16, 30, 0)
-    spotSmena =  datetime.time(23, 59, 0)
+    spotSmena = datetime.time(23, 59, 0)
 else:
     startSmena = datetime.time(00, 00, 00)
-    spotSmena =  datetime.time(8, 00, 00)
-
-
-
-
+    spotSmena = datetime.time(8, 00, 00)
 
 
 def proc(startSmena, spotSmena, plan, colProduct):
@@ -170,12 +167,9 @@ def otchet(request):
     except:
         allProc = 0
 
-
-
     otv_p = otv_pod.objects.all()
     uch = uchastok.objects.all()
     prich = list(prichina.objects.all().values())
-
 
     return render(request, "otchet.html", {
         'table': table,
@@ -184,7 +178,7 @@ def otchet(request):
         'sumProstoy': sumProstoy,
         'avgSpeed': avgSpeed,
         'boomOut': boomOut,
-        'allProc':allProc,
+        'allProc': allProc,
 
         'lableChart': lableChart,
         'dataChart': dataChart,
@@ -193,11 +187,13 @@ def otchet(request):
         'prich': prich,
         'uch': uch,
 
-
-
     })
 
-
+def update_table(request):
+    if request.method == 'POST':
+        print('tut')
+        print(request.POST.get)
+    return HttpResponse('yes')
 def update_items(request):
     if start1 <= datetime.datetime.now().time() <= start2:
         startSmena = datetime.time(8, 00, 0)
@@ -212,7 +208,12 @@ def update_items(request):
     table5 = Table5.objects.filter(startdata=datetime.date.today(),
                                    starttime__gte=startSmena,
                                    starttime__lte=spotSmena)
-
+    # plan = bottling_plan.objects.filter(Data=datetime.date.today(),
+    #                                ShiftNumber=2,
+    #                                BottlingLine='Линия розлива шампанских и игрист бутылка (Темрюк)')
+    #
+    # planTest=plan.aggregate(Sum('Quantity')).get('Quantity__sum')
+    # print(planTest)
     list = []
     for table in table5:
         table_info = {
@@ -235,7 +236,6 @@ def update_items(request):
 
 
 def getData(requst):
-
     plan = 31500
 
     if start1 <= datetime.datetime.now().time() <= start2:
@@ -248,8 +248,6 @@ def getData(requst):
         startSmena = datetime.time(00, 00, 00)
         spotSmena = datetime.time(8, 00, 00)
 
-
-
     table = Table5.objects.filter(startdata=datetime.date.today(),
                                   starttime__gte=startSmena,
                                   starttime__lte=spotSmena)
@@ -259,7 +257,6 @@ def getData(requst):
     boom = bottleExplosion.objects.filter(data=datetime.date.today(),
                                           time__gte=startSmena,
                                           time__lte=spotSmena)
-
 
     try:
         avgSpeed = round(speed.aggregate(Avg('speed')).get('speed__avg'), 2)
@@ -274,10 +271,10 @@ def getData(requst):
         sumProstoy = '00:00'
     try:
         product = round((round(speed.aggregate(Sum('speed')).get('speed__sum') / 20, 2)))
-        allProc=proc(startSmena, spotSmena, plan, product),
+        allProc = proc(startSmena, spotSmena, plan, product),
     except:
         product = 0
-        allProc=0
+        allProc = 0
     try:
         boomOut = boom.aggregate(Sum('bottle')).get('bottle__sum')
         if (boomOut == None):
@@ -346,17 +343,13 @@ def update(request):
 
     return HttpResponse('yes')
 
+
+
 @login_required
 def profile_view(request):
-
     return render(request, 'profile.html')
+
 
 def profileOut_view(request):
     logout(request)
     return render(request, 'index.html')
-
-
-
-
-
-
