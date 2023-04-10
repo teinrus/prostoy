@@ -2,8 +2,7 @@ import datetime
 
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import LoginView
-from django.template import loader
+
 
 from django.db.models import Count, Sum, Avg
 from django.http import HttpResponse, JsonResponse
@@ -348,12 +347,15 @@ def update(request):
     return HttpResponse('yes')
 
 @login_required
-def logIn(request):
-    return render(request, 'index.html')
+def profile_view(request):
 
-def logOut(request):
+    return render(request, 'profile.html')
+
+def profileOut_view(request):
     logout(request)
     return render(request, 'index.html')
+
+
 
 
 

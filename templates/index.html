@@ -5,38 +5,7 @@
         <title>Отчет простоев линии 5</title>
     </head>
 
-    <body style="padding: 0px 50px; margin-top: 20px; margin-left: 20px;">
-
-    <style>
-        .col__list {
-            margin: 0;
-            padding: 0;
-            width: calc((100% - 20px) / 2);
-            display: flex;
-            list-style: none;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-
-        .col__item {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            width: calc((100% - 10px) / 2);
-            outline: 2px solid #000;
-            justify-content: center;
-            align-items: center;
-            font-size: 15px;
-        }
-
-        .col__item:nth-child(-n+2) {
-            margin-bottom: 10px;
-        }
-
-        .col__item:nth-last-child(-n+2) {
-            margin-bottom: 0px;
-        }
-    </style>
+    <body>
 
     <script>//ajax для перезагрузки графика и ли#}
     $(document).ready(function () {
@@ -137,7 +106,7 @@
                 }
             });
 
-        }, 2000);
+        }, 1000);
 
 
     });
@@ -180,7 +149,7 @@
         <ul class="col__list">
             <li class="col__item">
                 <ul>
-                    <li style="list-style-type: none; font-size:23px">Средняя производительность линии</li>
+                    <li style="text-align: center;font-size:23px">Средняя производительность линии</li>
                     <li id="avgSpeeds" style="text-align: center; font-size:70px; list-style-type: none;">{{ avgSpeed }}</li>
                 </ul>
             </li>
