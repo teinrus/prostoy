@@ -3,7 +3,7 @@
 
 
 {% for row in table5 %}
-        {% if row.prichina == None and user.is_authenticated and user.is_staff  %}
+        {% if row.prichina == None and user.is_authenticated %}
     <tr>
         <td data-pk="{{ row.id }}">{{ row.id }}</td>
         <td data-name="startdata" class="startdata" data-type="text"
@@ -22,7 +22,8 @@
         <td data-name="comment" class="comment" data-type="textarea" data-pk="{{ row.id }}">{{ row.comment }}
         </td>
     </tr>
-        {% else %}
+            {% endif %}
+        {%  if not user.is_authenticated %}
             <tr>
         <td data-pk="{{ row.id }}">{{ row.id }}</td>
         <td data-name="startdata" class="startdata" data-type="text"

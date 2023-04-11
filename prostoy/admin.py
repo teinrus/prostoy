@@ -6,6 +6,9 @@ from .models import *
 admin.site.register(Table5)
 admin.site.register(speed5)
 
+admin.site.register(Table2)
+admin.site.register(speed2)
+
 admin.site.register(otv_pod)
 admin.site.register(prichina)
 admin.site.register(uchastok)
