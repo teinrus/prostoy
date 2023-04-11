@@ -38,8 +38,15 @@
 
             }
         });
-
-
+        $.ajax({
+            url: 'getData',
+            method: 'post',
+            success: function (data) {
+                 var ctx = document.getElementById("myChart").getContext("2d");
+                chart = new Chart(ctx, config);
+                dataUpdater();
+            }
+        });
 
         $.ajax({
             url: 'getData',
@@ -66,20 +73,11 @@
                     $('#boomOut').html(data.boomOut);
                     $('#sumProstoy').html(data.sumProstoy);
 
-
                 }
             });
             dataUpdater();
         }, 3000);
-        $.ajax({
-            url: 'getData',
-            method: 'post',
-            success: function (data) {
-                 var ctx = document.getElementById("myChart").getContext("2d");
-                chart = new Chart(ctx, config);
-                dataUpdater();
-            }
-        });
+
 
         function dataUpdater() {
             $.ajax({
