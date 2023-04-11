@@ -7,6 +7,7 @@
 
     <body>
 
+
     <script>//ajax для перезагрузки графика
     $(document).ready(function () {
         var chart;
@@ -42,7 +43,7 @@
             url: 'getData',
             method: 'post',
             success: function (data) {
-                 var ctx = document.getElementById("myChart").getContext("2d");
+                var ctx = document.getElementById("myChart").getContext("2d");
                 chart = new Chart(ctx, config);
                 dataUpdater();
             }
@@ -72,10 +73,10 @@
                     $('#allProc').html(data.allProc);
                     $('#boomOut').html(data.boomOut);
                     $('#sumProstoy').html(data.sumProstoy);
-
+                    dataUpdater();
                 }
             });
-            dataUpdater();
+
         }, 3000);
 
 
