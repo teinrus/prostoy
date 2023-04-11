@@ -2,7 +2,8 @@
 {% block content %}
 
 
-{% for row in table5 %}
+
+{% for row in table5|dictsort:"id" %}
         {% if row.prichina == None and user.is_authenticated %}
     <tr>
         <td data-pk="{{ row.id }}">{{ row.id }}</td>

@@ -9,7 +9,38 @@
 
     <script>//ajax для перезагрузки графика
     $(document).ready(function () {
-        var Char = null;
+        var chart;
+        var config;
+        $.ajax({
+            url: 'getData',
+            method: 'post',
+            success: function (data) {
+                config = {
+                    type: 'bar',
+                    data: {
+                        labels: data.lableChart,
+                        datasets: [{
+                            label: '# Производительность линии 5',
+                            data: data.dataChart,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        {#animation: false,#}
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                };
+
+
+            }
+        });
+
+
+
         $.ajax({
             url: 'getData',
             method: 'post',
@@ -38,75 +69,31 @@
 
                 }
             });
-
+            dataUpdater();
         }, 3000);
         $.ajax({
             url: 'getData',
             method: 'post',
             success: function (data) {
-
-                if (Char != null) {
-                    Char.destroy();
-                };
-
-                Char = new Chart("myChart", {
-                    type: 'bar',
-                    data: {
-                        labels: data.lableChart,
-                        datasets: [{
-                            label: '# Производительность линии 5',
-                            data: data.dataChart,
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        animation: false,
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-
+                 var ctx = document.getElementById("myChart").getContext("2d");
+                chart = new Chart(ctx, config);
+                dataUpdater();
             }
         });
-        setInterval(function () {
+
+        function dataUpdater() {
             $.ajax({
+                type: "post",
                 url: 'getData',
-                method: 'post',
-                success: function (data) {
-
-                    if (Char != null) {
-                        Char.destroy();
-                    };
-
-                    Char = new Chart("myChart", {
-                        type: 'bar',
-                        data: {
-                            labels: data.lableChart,
-                            datasets: [{
-                                label: '# Производительность линии 5',
-                                data: data.dataChart,
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            animation: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
-                    });
-
-                }
+            }).done(function (newData) {
+                chart.data.labels = newData.lableChart;
+                chart.data.datasets[0].data= newData.dataChart;
+                chart.update();
             });
 
-        }, 1000);
+        }
 
-
+;
     });
     </script>
 
@@ -117,18 +104,17 @@
             update_item(item_num)
             setInterval(function () {
                 if (!$(".popover-title").is(':visible')) {
-
-                    var item_num = $(this).attr('id');
+                    item_num = $(this).attr('id');
                     update_item(item_num);
 
                 }
 
-            }, 150000);
+            }, 2000);
 
             function update_item(item_num) {
                 $('#sample_data tbody').load(
                     "{% url 'update_items' %}?item_num=" + item_num
-                ).sort();
+                );
 
 
             }
