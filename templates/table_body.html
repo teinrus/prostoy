@@ -1,10 +1,7 @@
 
 {% block content %}
 
-
-
 {% for row in table5|dictsort:"id"  reversed %}
-        {% if user.is_authenticated %}
     <tr>
         <td data-pk="{{ row.id }}">{{ row.id }}</td>
         <td data-name="startdata" class="startdata" data-type="text"
@@ -23,8 +20,6 @@
         <td data-name="comment" class="comment" data-type="textarea" data-pk="{{ row.id }}">{{ row.comment }}
         </td>
     </tr>
-            {% endif %}
-
 {% endfor %}
 
 {% endblock %}
