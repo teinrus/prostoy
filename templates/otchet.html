@@ -1,11 +1,130 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    {% if user.username == 'master' or user.username == 'admin' %}
+    <script> // зависимости выпадающих списков таблици
+    $(document).ready(function () {
+        var sor = [];
+        let allProstoy
+        var test =
+        {{ prich|safe }}
+        var temp = '%'
+        $(function () {
+
+
+            $('#sample_data').mousemove(function () {
+                $('td.otv_pod', this).mousedown(function () {
+
+                    temp = '';
+                    for (let i = 0; i < test.length; i++) {
+                        if ($(this).text() === test[i].key) {
+                            temp += test[i].prichina + '%'
+                        }
+                    }
+                    allProstoy = temp.split('%')
+                    sor = [];
+                    for (let n = 0; n < allProstoy.length; n++) {
+                        if (allProstoy[n] !== '') {
+                            sor.push({value: allProstoy[n], text: allProstoy[n]})
+                        }
+                    }
+                })
+            });
+            $('#sample_data').editable({
+                container: 'body',
+                selector: 'td.prichina',
+                url: '/update',
+                title: 'prichina',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    function () {
+                        return sor
+                    },
+                validate: function (value) {
+                    if ($.trim(value)) {
+                    }
+                }
+            });
+        });
+
+        var dataTable = $('#sample_data').DataTable();
+
+        $('#sample_data').editable({
+            container: 'body',
+            selector: 'td.uchastok',
+            url: '/update',
+            title: 'uchastok',
+            type: 'POST',
+            value: "Не выбрано",
+            source:
+                [
+                    {% for el in uch %}
+                        {value: "{{ el }}", text: "{{ el }}"},
+                    {% endfor %}],
+            validate: function (value) {
+                if ($.trim(value) == '') {
+                    return 'This field is required';
+                }
+            }
+        });
+
+        $('#sample_data').editable({
+            container: 'body',
+            selector: 'td.otv_pod',
+            url: '/update',
+            title: 'otv_pod',
+            type: 'POST',
+            source: [
+                {% for el in otv_p %}
+                    {value: "{{ el }}", text: "{{ el }}"},
+                {% endfor %}
+            ],
+            validate: function (value) {
+                if ($.trim(value)) {
+                    temp = '%'
+                    for (let i = 0; i < test.length; i++) {
+                        if (value === test[i].key) {
+                            temp += test[i].prichina + '%'
+                        }
+                    }
+                    allProstoy = temp.split('%')
+                    sor = [];
+                    for (let n = 0; n < allProstoy.length; n++) {
+                        if (allProstoy[n] !== '') {
+                            sor.push({value: allProstoy[n], text: allProstoy[n]})
+                        }
+                    }
+                }
+            }
+        });
+
+        $('#sample_data').editable({
+            container: 'body',
+            selector: 'td.comment',
+            url: '/update',
+            title: 'comment',
+            type: 'POST',
+            value: "",
+
+            validate: function (value) {
+                if ($.trim(value) == '') {
+                    return 'This field is required';
+                }
+            }
+        });
+    });
+    </script>
+{% endif %}
+
     <head>
         <title>Отчет простоев линии 5</title>
     </head>
 
     <body>
+
+    <h4>Линия: {{ line }}</h4>
+    <h4>Смена: {{ smena }}</h4>
 
     <h4>Общее время простоя {{ sumProstoy }}</h4>
     <h4>Средняя скорость {{ avgSpeed }} </h4>

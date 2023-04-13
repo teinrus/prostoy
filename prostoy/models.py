@@ -18,7 +18,7 @@ class Table5(models.Model):
     class Meta:
         verbose_name_plural = "Простои 5 линии"
 
-class speed5(models.Model):
+class Speed5(models.Model):
     data = models.DateField('Дата')
     time = models.TimeField('Время')
     speed = models.IntegerField('Скорость линии')
@@ -106,7 +106,7 @@ class Table2(models.Model):
     class Meta:
         verbose_name_plural = "Простои 2 линии"
 
-class speed2(models.Model):
+class Speed2(models.Model):
     data = models.DateField('Дата')
     time = models.TimeField('Время')
     speed = models.IntegerField('Скорость линии')

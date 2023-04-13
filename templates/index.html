@@ -1,180 +1,23 @@
 {% extends 'base.html' %}
-
 {% block content %}
-    <head>
-        <title>Простои линии 5</title>
-    </head>
 
-    <body>
+    {% if user.username == 'operator5' %}
+        {% include 'line5.html' %}
+    {% endif %}
 
+    {% if user.username == 'operator2' %}
+        {% include 'line2.html' %}
+    {% endif %}
 
-    <script>//ajax для перезагрузки графика
-    $(document).ready(function () {
-        var chart;
-        var config;
-        $.ajax({
-            url: 'getData',
-            method: 'post',
-            success: function (data) {
-                config = {
-                    type: 'bar',
-                    data: {
-                        labels: data.lableChart,
-                        datasets: [{
-                            label: '# Производительность линии 5',
-                            data: data.dataChart,
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        {#animation: false,#}
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                };
+    {% if user.username == 'master' or user.username == 'admin' %}
+        {% include 'master.html' %}
+    {% endif %}
 
 
-            }
-        });
-        $.ajax({
-            url: 'getData',
-            method: 'post',
-            success: function (data) {
-                var ctx = document.getElementById("myChart").getContext("2d");
-                chart = new Chart(ctx, config);
-                dataUpdater();
-            }
-        });
-
-        $.ajax({
-            url: 'getData',
-            method: 'post',
-            success: function (data) {
-
-                $('#avgSpeeds').html(data.avgSpeed);
-                $('#allProc').html(data.allProc);
-                $('#boomOut').html(data.boomOut);
-                $('#sumProstoy').html(data.sumProstoy);
-
-
-            }
-        });
-        setInterval(function () {
-
-            $.ajax({
-                url: 'getData',
-                method: 'post',
-                success: function (data) {
-
-                    $('#avgSpeeds').html(data.avgSpeed);
-                    $('#allProc').html(data.allProc);
-                    $('#boomOut').html(data.boomOut);
-                    $('#sumProstoy').html(data.sumProstoy);
-                    dataUpdater();
-                }
-            });
-
-        }, 3000);
-
-
-        function dataUpdater() {
-            $.ajax({
-                type: "post",
-                url: 'getData',
-            }).done(function (newData) {
-                chart.data.labels = newData.lableChart;
-                chart.data.datasets[0].data= newData.dataChart;
-                chart.update();
-            });
-
-        }
-
-;
-    });
-    </script>
-
-    <script>
-
-        $(document).ready(function () {
-            var item_num = $(this).attr('id');
-            update_item(item_num)
-            setInterval(function () {
-                if (!$(".popover-title").is(':visible')) {
-                    item_num = $(this).attr('id');
-                    update_item(item_num);
-
-                }
-
-            }, 2000);
-
-            function update_item(item_num) {
-                $('#sample_data tbody').load(
-                    "{% url 'update_items' %}?item_num=" + item_num
-                );
-
-
-            }
-
-
-        });
-
-
-    </script>
-
-
-    <div class="col__wrapper"
-         style=" display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;  margin-top: 1rem;">
-        <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000; ">
-            <canvas id="myChart"></canvas>
-        </div>
-        <ul class="col__list">
-            <li class="col__item">
-                <ul>
-                    <li style="text-align: center;font-size:23px">Средняя производительность линии</li>
-                    <li id="avgSpeeds"
-                        style="text-align: center; font-size:70px; list-style-type: none;">{{ avgSpeed }}</li>
-                </ul>
-            </li>
-            <li class="col__item">
-                <ul>
-                    <li style="list-style-type: none; font-size:23px">Взрывы бутылки</li>
-                    <li id="boomOut" style="text-align: center; font-size:70px; list-style-type: none;"></li>
-                </ul>
-            <li class="col__item">
-                <ul>
-                    <li style="list-style-type: none; font-size:23px">Общее время простоя</li>
-                    <li id="sumProstoy" style="text-align: center; font-size:70px; list-style-type: none;"></li>
-                </ul>
-            <li class="col__item">
-                <ul>
-                    <li style="list-style-type: none; font-size:23px">Процент выполнения</li>
-                    <li id="allProc" style="text-align: center; font-size:70px; list-style-type: none;"></li>
-                </ul>
-
-        </ul>
-    </div>
-
-    <table id="sample_data" class="table table-bordered table-striped">
-        <thead>
-        <tr>
-            <th>id</th>
-            <th>Дата</th>
-            <th>Время начала простоя</th>
-            <th>Время простоя</th>
-            <th>Участок</th>
-
-            <th>Ответст. подразделение</th>
-            <th>Причина</th>
-            <th>Комментарий</th>
-        </thead>
-        <tbody>
-        {% include 'table_body.html' %}
-        </tbody>
-    </table>
-    </body>
+    {% if not user.is_authenticated %}
+        {% include 'Chart5.html' %}
+        {% include 'Chart2.html' %}
+    {% endif %}
 
 
 {% endblock %}
