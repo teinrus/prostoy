@@ -1,10 +1,4 @@
 {% block content %}
-
-    {% include 'line2.html' %}
-
-    {% include 'line5.html' %}
-
-
     {% if user.username == 'master' or user.username == 'admin' or user.username == 'operator2' %}
         <script> // зависимости выпадающих списков таблицы
         $(document).ready(function () {
@@ -262,6 +256,7 @@
 
 
     </script>
+
     <script>
 
         $(document).ready(function () {
@@ -289,4 +284,15 @@
 
 
     </script>
+
+
+
+    {% include 'line5.html' %}
+
+        {% include 'line2.html' %}
+
+
+
+
+
 {% endblock %}

@@ -8,7 +8,7 @@
 
 
 <h1 style="text-align:center">Простои линии 5</h1>
-{% if not user.username == 'master' %}
+{% if not user.username == 'master' or  not user.username == 'admin' %}
     <div class="col__wrapper"
          style=" display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;  margin-top: 1rem;">
         <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000; ">
