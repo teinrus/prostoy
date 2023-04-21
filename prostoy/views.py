@@ -25,7 +25,7 @@ else:
     startSmena = datetime.time(00, 00, 00)
     spotSmena = datetime.time(8, 00, 00)
 
-
+# функция формирования процентов за текущию смену
 def proc(startSmena, spotSmena, plan, colProduct):
     today = datetime.date.today()
     # количество продукции вып в сек
@@ -42,7 +42,7 @@ def proc(startSmena, spotSmena, plan, colProduct):
     # проц вып продукции
     return int(colProduct / ((int(diff2.total_seconds()) * planProdSec) / 100))
 
-
+# стартовая страница
 def index(request):
     if request.method == 'GET':
         table5 = Table5.objects.filter(startdata=datetime.date.today(),
@@ -76,14 +76,16 @@ def index(request):
     })
 
 
+# блок формирования отчета
 def otchet(request):
+
     form = Otchet(request.GET)
     if form.is_valid():
         # Сортировка по дате
         if form.cleaned_data["start_data"] and form.cleaned_data["finish_data"] and (
-                form.cleaned_data["LineF"] == 'Line 5'):
+                form.cleaned_data["LineF"] == 'Линиия 5'):
             if form.cleaned_data["SmenaF"]:
-                if form.cleaned_data["SmenaF"] == 'Smena 0':
+                if form.cleaned_data["SmenaF"] == 'Смена 0':
                     table = Table5.objects.filter(starttime__gte=datetime.time(0),
                                                   starttime__lte=datetime.time(23, 59),
                                                   startdata__gte=form.cleaned_data["start_data"],
@@ -98,7 +100,11 @@ def otchet(request):
                                                           data__lte=form.cleaned_data["finish_data"],
                                                           time__gte=datetime.time(0),
                                                           time__lte=datetime.time(23, 59))
-        if form.cleaned_data["SmenaF"] == 'Smena 1':
+                    prod = ProductionOutput5.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                  data__lte=form.cleaned_data["finish_data"],
+                                                  time__gte=datetime.time(0),
+                                                  time__lte=datetime.time(23, 59))
+        if form.cleaned_data["SmenaF"] == 'Смена 1':
             table = Table5.objects.filter(starttime__gte=datetime.time(8),
                                           starttime__lte=datetime.time(16, 30),
                                           startdata__gte=form.cleaned_data["start_data"],
@@ -112,7 +118,11 @@ def otchet(request):
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(8),
                                                   time__lte=datetime.time(16, 30))
-        if form.cleaned_data["SmenaF"] == 'Smena 2':
+            prod = ProductionOutput5.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                          data__lte=form.cleaned_data["finish_data"],
+                                          time__gte=datetime.time(8),
+                                          time__lte=datetime.time(16, 30))
+        if form.cleaned_data["SmenaF"] == 'Смена 2':
             table = Table5.objects.filter(starttime__gte=datetime.time(16, 30),
                                           starttime__lte=datetime.time(23, 59),
                                           startdata__gte=form.cleaned_data["start_data"],
@@ -126,7 +136,11 @@ def otchet(request):
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(16, 30),
                                                   time__lte=datetime.time(23, 59))
-        if form.cleaned_data["SmenaF"] == 'Smena 3':
+            prod = ProductionOutput5.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                          data__lte=form.cleaned_data["finish_data"],
+                                          time__gte=datetime.time(16, 30),
+                                          time__lte=datetime.time(23, 59))
+        if form.cleaned_data["SmenaF"] == 'Смена 3':
             table = Table5.objects.filter(starttime__gte=datetime.time(00, 00),
                                           starttime__lte=datetime.time(8, 00),
                                           startdata__gte=form.cleaned_data["start_data"],
@@ -140,11 +154,17 @@ def otchet(request):
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(00, 00),
                                                   time__lte=datetime.time(8, 00))
+            prod = ProductionOutput5.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                          data__lte=form.cleaned_data["finish_data"],
+                                          time__gte=datetime.time(00, 00),
+                                          time__lte=datetime.time(8, 00))
+
+
         # Сортировка по сменам линии 2:
         if form.cleaned_data["start_data"] and form.cleaned_data["finish_data"] and (
-                form.cleaned_data["LineF"] == 'Line 2'):
+                form.cleaned_data["LineF"] == 'Линиия 2'):
             if form.cleaned_data["SmenaF"]:
-                if form.cleaned_data["SmenaF"] == 'Smena 0':
+                if form.cleaned_data["SmenaF"] == 'Смена 0':
                     table2 = Table2.objects.filter(starttime__gte=datetime.time(0),
                                                    starttime__lte=datetime.time(23, 59),
                                                    startdata__gte=form.cleaned_data["start_data"],
@@ -155,8 +175,12 @@ def otchet(request):
                                                    data__lte=form.cleaned_data["finish_data"],
                                                    time__gte=datetime.time(0),
                                                    time__lte=datetime.time(23, 59))
+                    productionOutput2 = ProductionOutput2.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                                   data__lte=form.cleaned_data["finish_data"],
+                                                   time__gte=datetime.time(0),
+                                                   time__lte=datetime.time(23, 59))
 
-            if form.cleaned_data["SmenaF"] == 'Smena 1':
+            if form.cleaned_data["SmenaF"] == 'Смена 1':
                 table2 = Table2.objects.filter(starttime__gte=datetime.time(8),
                                                starttime__lte=datetime.time(16, 30),
                                                startdata__gte=form.cleaned_data["start_data"],
@@ -166,8 +190,12 @@ def otchet(request):
                                                data__lte=form.cleaned_data["finish_data"],
                                                time__gte=datetime.time(8),
                                                time__lte=datetime.time(16, 30))
+                productionOutput2 = ProductionOutput2.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                               data__lte=form.cleaned_data["finish_data"],
+                                               time__gte=datetime.time(8),
+                                               time__lte=datetime.time(16, 30))
 
-            if form.cleaned_data["SmenaF"] == 'Smena 2':
+            if form.cleaned_data["SmenaF"] == 'Смена 2':
                 table2 = Table2.objects.filter(starttime__gte=datetime.time(16, 30),
                                                starttime__lte=datetime.time(23, 59),
                                                startdata__gte=form.cleaned_data["start_data"],
@@ -177,8 +205,12 @@ def otchet(request):
                                                data__lte=form.cleaned_data["finish_data"],
                                                time__gte=datetime.time(16, 30),
                                                time__lte=datetime.time(23, 59))
+                productionOutput2 = ProductionOutput2.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                               data__lte=form.cleaned_data["finish_data"],
+                                               time__gte=datetime.time(16, 30),
+                                               time__lte=datetime.time(23, 59))
 
-            if form.cleaned_data["SmenaF"] == 'Smena 3':
+            if form.cleaned_data["SmenaF"] == 'Смена 3':
                 table2 = Table2.objects.filter(starttime__gte=datetime.time(00, 00),
                                                starttime__lte=datetime.time(8, 00),
                                                startdata__gte=form.cleaned_data["start_data"],
@@ -188,27 +220,49 @@ def otchet(request):
                                                data__lte=form.cleaned_data["finish_data"],
                                                time__gte=datetime.time(00, 00),
                                                time__lte=datetime.time(8, 00))
+                productionOutput2 = ProductionOutput2.objects.filter(data__gte=form.cleaned_data["start_data"],
+                                               data__lte=form.cleaned_data["finish_data"],
+                                               time__gte=datetime.time(00, 00),
+                                               time__lte=datetime.time(8, 00))
+
             table=table2
             speed=speed2
+            prod=productionOutput2
+            boom=0
+
 
     lableChart = []
     dataChart = []
 
+    #Общее количество  продукции
+    try:
+        allProd = prod.aggregate(Sum('production')).get('production__sum')
+        if (allProd == None):
+            allProd = 0
+    except:
+        allProd = 0
+
+    #Общее количество  врывов бутылок
     try:
         boomOut = boom.aggregate(Sum('bottle')).get('bottle__sum')
         if (boomOut == None):
             boomOut = 0
     except:
         boomOut = 0
+
+    #Общее время простоя
     try:
         sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum')
     except:
         table = []
         sumProstoy = 0
+    # Средняя скорость
     try:
         avgSpeed = round(speed.aggregate(Avg('speed')).get('speed__avg'), 2)
     except:
         avgSpeed = 0
+
+    # Данные для графика
     try:
         for sp in speed:
             lableChart.append(str(sp.time))
@@ -217,10 +271,7 @@ def otchet(request):
         lableChart = []
         dataChart = []
 
-    try:
-        allProc = round((round(speed.aggregate(Sum('speed')).get('speed__sum') / 20, 2)))
-    except:
-        allProc = 0
+
 
     otv_p = otv_pod.objects.all()
     uch = uchastok.objects.all()
@@ -238,7 +289,7 @@ def otchet(request):
         'sumProstoy': sumProstoy,
         'avgSpeed': avgSpeed,
         'boomOut': boomOut,
-        'allProc': allProc,
+        'allProd': allProd,
 
         'lableChart': lableChart,
         'dataChart': dataChart,
@@ -254,301 +305,13 @@ def otchet(request):
 
 
 
-def update_items5(request):
-    if start1 <= datetime.datetime.now().time() <= start2:
-        startSmena = datetime.time(8, 00, 0)
-        spotSmena = datetime.time(16, 30, 0)
-    elif start2 <= datetime.datetime.now().time() <= start3:
-        startSmena = datetime.time(16, 30, 0)
-        spotSmena = datetime.time(23, 59, 0)
-    else:
-        startSmena = datetime.time(00, 00, 00)
-        spotSmena = datetime.time(8, 00, 00)
-
-    table5 = Table5.objects.filter(startdata=datetime.date.today(),
-                                   starttime__gte=startSmena,
-                                   starttime__lte=spotSmena)
-    # plan = bottling_plan.objects.filter(Data=datetime.date.today(),
-    #                                ShiftNumber=2,
-    #                                BottlingLine='Линия розлива шампанских и игрист бутылка (Темрюк)')
-    #
-    # planTest=plan.aggregate(Sum('Quantity')).get('Quantity__sum')
-    # print(planTest)
-    list = []
-    for table in table5:
-        table_info = {
-            'id': table.id,
-            'startdata': table.startdata,
-            'starttime': table.starttime,
-            'prostoy': table.prostoy,
-
-            'uchastok': table.uchastok,
-            'otv_pod': table.otv_pod,
-            'prichina': table.prichina,
-            'comment': table.comment,
-        }
-        list.append(table_info)
-
-    table_dic = {}
-    table_dic['data'] = list
-
-    return render(request, 'table_body.html', {'table5': table5})
-def update_items2(request):
-    if start1 <= datetime.datetime.now().time() <= start2:
-        startSmena = datetime.time(8, 00, 0)
-        spotSmena = datetime.time(16, 30, 0)
-    elif start2 <= datetime.datetime.now().time() <= start3:
-        startSmena = datetime.time(16, 30, 0)
-        spotSmena = datetime.time(23, 59, 0)
-    else:
-        startSmena = datetime.time(00, 00, 00)
-        spotSmena = datetime.time(8, 00, 00)
-
-    table2 = Table2.objects.filter(startdata=datetime.date.today(),
-                                   starttime__gte=startSmena,
-                                   starttime__lte=spotSmena)
-    # plan = bottling_plan.objects.filter(Data=datetime.date.today(),
-    #                                ShiftNumber=2,
-    #                                BottlingLine='Линия розлива шампанских и игрист бутылка (Темрюк)')
-    #
-    # planTest=plan.aggregate(Sum('Quantity')).get('Quantity__sum')
-    # print(planTest)
-    list = []
-    for table in table2:
-        table_info = {
-            'id': table.id,
-            'startdata': table.startdata,
-            'starttime': table.starttime,
-            'prostoy': table.prostoy,
-
-            'uchastok': table.uchastok,
-            'otv_pod': table.otv_pod,
-            'prichina': table.prichina,
-            'comment': table.comment,
-        }
-        list.append(table_info)
-
-    table_dic = {}
-    table_dic['data'] = list
-
-    return render(request, 'table_body2.html', {'table2': table2})
-
-def getData(requst):
-    plan = 31500
-
-    if start1 <= datetime.datetime.now().time() <= start2:
-        startSmena = datetime.time(8, 00, 0)
-        spotSmena = datetime.time(16, 30, 0)
-    elif start2 <= datetime.datetime.now().time() <= start3:
-        startSmena = datetime.time(16, 30, 0)
-        spotSmena = datetime.time(23, 59, 0)
-    else:
-        startSmena = datetime.time(00, 00, 00)
-        spotSmena = datetime.time(8, 00, 00)
-
-    table = Table5.objects.filter(startdata=datetime.date.today(),
-                                  starttime__gte=startSmena,
-                                  starttime__lte=spotSmena)
-    speed = Speed5.objects.filter(data=datetime.date.today(),
-                                  time__gte=startSmena,
-                                  time__lte=spotSmena)
-    boom = bottleExplosion.objects.filter(data=datetime.date.today(),
-                                          time__gte=startSmena,
-                                          time__lte=spotSmena)
-
-    try:
-        avgSpeed = round(speed.aggregate(Avg('speed')).get('speed__avg'), 2)
-    except:
-        avgSpeed = 0
-    try:
-        sumProstoy = table.aggregate(Sum('prostoy')).get('prostoy__sum')
-
-        if (sumProstoy == None):
-            sumProstoy = '00:00'
-    except:
-        sumProstoy = '00:00'
-    try:
-        product = round((round(speed.aggregate(Sum('speed')).get('speed__sum') / 20, 2)))
-        allProc = proc(startSmena, spotSmena, plan, product),
-    except:
-        product = 0
-        allProc = 0
-    try:
-        boomOut = boom.aggregate(Sum('bottle')).get('bottle__sum')
-        if (boomOut == None):
-            boomOut = 0
-    except:
-        boomOut = 0
-
-    lableChart = []
-    dataChart = []
-
-    for sp in speed:
-        lableChart.append(str(sp.time))
-        dataChart.append(sp.speed)
-
-    result = {"allProc": allProc,
-              "boomOut": boomOut,
-              'sumProstoy': str(sumProstoy),
-              'avgSpeed': avgSpeed,
-              'lableChart': lableChart,
-              'dataChart': dataChart,
-
-              }
-    return JsonResponse(result)
-
-def getData2(requst):
-
-    plan = 31500
-
-    if start1 <= datetime.datetime.now().time() <= start2:
-        startSmena = datetime.time(8, 00, 0)
-        spotSmena = datetime.time(16, 30, 0)
-    elif start2 <= datetime.datetime.now().time() <= start3:
-        startSmena = datetime.time(16, 30, 0)
-        spotSmena = datetime.time(23, 59, 0)
-    else:
-        startSmena = datetime.time(00, 00, 00)
-        spotSmena = datetime.time(8, 00, 00)
-
-    table2 = Table2.objects.filter(startdata=datetime.date.today(),
-                                  starttime__gte=startSmena,
-                                  starttime__lte=spotSmena)
-    speed2 = Speed2.objects.filter(data=datetime.date.today(),
-                                  time__gte=startSmena,
-                                  time__lte=spotSmena)
-
-
-    try:
-        avgSpeed = round(speed2.aggregate(Avg('speed')).get('speed__avg'), 2)
-    except:
-        avgSpeed = 0
-    try:
-        sumProstoy = table2.aggregate(Sum('prostoy')).get('prostoy__sum')
-
-        if (sumProstoy == None):
-            sumProstoy = '00:00'
-    except:
-        sumProstoy = '00:00'
-    try:
-        product = round((round(speed2.aggregate(Sum('speed')).get('speed__sum') / 20, 2)))
-        allProc2 = proc(startSmena, spotSmena, plan, product),
-    except:
-        product = 0
-        allProc2 = 0
 
 
 
-    lableChart2 = []
-    dataChart2 = []
-
-    for sp in speed2:
-        lableChart2.append(str(sp.time))
-        dataChart2.append(sp.speed)
-
-    result = {"allProc2": allProc2,
-
-              'sumProstoy2': str(sumProstoy),
-              'avgSpeed2': avgSpeed,
-              'lableChart2': lableChart2,
-              'dataChart2': dataChart2,
-
-              }
-    return JsonResponse(result)
-
-
-def update(request):
-    if request.method == 'POST':
-
-        pk = request.POST.get('pk')
-        name = request.POST.get('name')
-        v = request.POST.get('value')
-
-        if name == 'uchastok':
-            try:
-                a = Table5.objects.get(id=pk)
-                a.uchastok = v
-                a.save()
-            except:
-                a = Table5(uchastok=v, id=pk)
-                a.save()
-        elif name == 'prichina':
-            try:
-
-                a = Table5.objects.get(id=pk)
-                a.prichina = v
-                a.save()
-            except:
-                a = Table5(prichina=v, id=pk)
-                a.save()
-        elif name == 'otv_pod':
-            try:
-                a = Table5.objects.get(id=pk)
-                a.otv_pod = v
-                a.save()
-            except:
-                a = Table5(otv_pod=v, id=pk)
-                a.save()
-        elif name == 'comment':
-            try:
-                a = Table5.objects.get(id=pk)
-                a.comment = v
-                a.save()
-            except:
-                a = Table5(comment=v, id=pk)
-                a.save()
-
-    return HttpResponse('yes')
-
-def update2(request):
-    if request.method == 'POST':
-
-        pk = request.POST.get('pk')
-        name = request.POST.get('name')
-        v = request.POST.get('value')
-
-        if name == 'uchastok':
-            try:
-                a = Table2.objects.get(id=pk)
-                a.uchastok = v
-                a.save()
-            except:
-                a = Table2(uchastok=v, id=pk)
-                a.save()
-        elif name == 'prichina':
-            try:
-
-                a = Table2.objects.get(id=pk)
-                a.prichina = v
-                a.save()
-            except:
-                a = Table2(prichina=v, id=pk)
-                a.save()
-        elif name == 'otv_pod':
-            try:
-                a = Table2.objects.get(id=pk)
-                a.otv_pod = v
-                a.save()
-            except:
-                a = Table2(otv_pod=v, id=pk)
-                a.save()
-        elif name == 'comment':
-            try:
-                a = Table2.objects.get(id=pk)
-                a.comment = v
-                a.save()
-            except:
-                a = Table2(comment=v, id=pk)
-                a.save()
-
-    return HttpResponse('yes')
-
-
+# блок аунтефикации
 @login_required
 def profile_view(request):
-    return render(request, 'profile.html')
-
-
+    return render(request, 'registration/profile.html')
 def profileOut_view(request):
     logout(request)
     return render(request, 'index.html')

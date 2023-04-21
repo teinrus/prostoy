@@ -59,32 +59,26 @@
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
-
 </head>
 
 <body style="padding: 0px 50px; margin-top: 20px; margin-left: 0px;">
 
-
-
-
-
-
 <footer class="not-print">
     <ul class="ul-bar">
 
-            <li>
-                <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'home' %}'">
-                    Главная
-                </button>
-            </li>
-            <li>
+        <li>
+            <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'home' %}'">
+                Главная
+            </button>
+        </li>
+        <li>
 
-                <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'otchet' %}'">
-                    Отчет
-                </button>
+            <button class="btn btn-sm btn-primary w-100 ml-2" onclick="location.href='{% url 'otchet' %}'">
+                Отчет
+            </button>
 
 
-            </li>
+        </li>
 
         <li>
 
@@ -108,9 +102,14 @@
 {% endblock %}
 </body>
 <style>
+     .col__wrapper {
+        padding: 2px;
+
+    }
+
     .col__list {
         margin: 0;
-        padding: 0;
+        padding:0;
         width: calc((100% - 20px) / 2);
         display: flex;
         list-style: none;

@@ -2,6 +2,8 @@
 
 
     <h1 style="text-align:center">Простои линии 2</h1>
+
+
     {% if not user.username == 'master' and not user.username == 'admin' %}
         <div class="col__wrapper"
              style=" display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;  margin-top: 1rem;">
@@ -18,7 +20,9 @@
                 </li>
                 <li class="col__item">
                     <ul>
-
+                        <li style="text-align: center;font-size:23px">Количество продукции</li>
+                        <li id="sumProduct2"
+                            style="text-align: center; font-size:70px; list-style-type: none;">{{ productionOutput2 }}</li>
                     </ul>
                 <li class="col__item">
                     <ul>
@@ -36,47 +40,11 @@
     {% endif %}
 
 
-<script>//ajax для перезагрузки графика
-$(document).ready(function () {
-    var ctx2 = document.getElementById("Chart2").getContext("2d");
-    var config2;
-    var chart2 = [];
-    $.ajax({
-        url: 'getData2',
-        method: 'post',
-        success: function (data) {
-
-            $('#avgSpeeds2').html(data.avgSpeed2);
-            $('#allProc2').html(data.allProc2);
-            $('#boomOut2').html(data.boomOut2);
-            $('#sumProstoy2').html(data.sumProstoy2);
-            config2 = {
-                type: 'bar',
-                data: {
-                    labels: data.lableChart2,
-                    datasets: [{
-                        label: '# Производительность линии 5',
-                        data: data.dataChart2,
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    {#animation: false,#}
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            };
-            chart2 = new Chart(ctx2, config2);
-            dataUpdater();
-
-
-        }
-    });
-    setInterval(function () {
-
+    <script>//ajax для перезагрузки графика
+    $(document).ready(function () {
+        var ctx2 = document.getElementById("Chart2").getContext("2d");
+        var config2;
+        var chart2 = [];
         $.ajax({
             url: 'getData2',
             method: 'post',
@@ -84,30 +52,65 @@ $(document).ready(function () {
 
                 $('#avgSpeeds2').html(data.avgSpeed2);
                 $('#allProc2').html(data.allProc2);
-                $('#boomOut2').html(data.boomOut2);
+                $('#sumProduct2').html(data.sumProduct2);
                 $('#sumProstoy2').html(data.sumProstoy2);
+                config2 = {
+                    type: 'bar',
+                    data: {
+                        borderColor: 'rgb(0,100,255)',
+                        labels: data.lableChart2,
+                        datasets: [{
+                            label: '# Производительность линии 2',
+                            data: data.dataChart2,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        {#animation: false,#}
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                };
+                chart2 = new Chart(ctx2, config2);
                 dataUpdater();
+
+
             }
         });
+        setInterval(function () {
 
-    }, 3000);
+            $.ajax({
+                url: 'getData2',
+                method: 'post',
+                success: function (data) {
+
+                    $('#avgSpeeds2').html(data.avgSpeed2);
+                    $('#allProc2').html(data.allProc2);
+                    $('#sumProstoy2').html(data.sumProstoy2);
+                    $('#sumProduct2').html(data.sumProduct2);
+                    dataUpdater();
+                }
+            });
+
+        }, 3000);
 
 
-    function dataUpdater() {
-        $.ajax({
-            type: "post",
-            url: 'getData2',
-        }).done(function (newData) {
-            chart2.data.labels = newData.lableChart2;
-            chart2.data.datasets[0].data = newData.dataChart2;
-            chart2.update();
-        });
+        function dataUpdater() {
+            $.ajax({
+                type: "post",
+                url: 'getData2',
+            }).done(function (newData) {
+                chart2.data.labels = newData.lableChart2;
+                chart2.data.datasets[0].data = newData.dataChart2;
+                chart2.update();
+            });
 
-    }
-    console.log(chart2)
-    ;
-});
-</script>
+        }
+    });
+    </script>
 
     <script>
 

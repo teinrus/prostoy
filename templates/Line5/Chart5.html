@@ -8,7 +8,7 @@
 
 
 <h1 style="text-align:center">Простои линии 5</h1>
-{% if not user.username == 'master' or  not user.username == 'admin' %}
+{% if not user.username == 'admin' %}
     <div class="col__wrapper"
          style=" display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 20px;  margin-top: 1rem;">
         <div class="col" style="width: calc((100% - 30px) / 2); outline: 2px solid #000; ">
@@ -38,8 +38,16 @@
                     <li id="allProc" style="text-align: center; font-size:70px; list-style-type: none;"></li>
                 </ul>
 
+            <li class="col__item" style="margin-top:10px;">
+                <ul>
+            <li style=" display: inline;list-style-type: none; font-size:15px">Количество продукции: </li>
+                    <li id="sumProduct" style=" display: inline;font-size:15px; list-style-type: none;"></li>
+                </ul>
+
         </ul>
     </div>
+
+
 {% endif %}
 
     <script>//ajax для перезагрузки графика
@@ -59,8 +67,10 @@ $(document).ready(function () {
             $('#allProc').html(data.allProc);
             $('#boomOut').html(data.boomOut);
             $('#sumProstoy').html(data.sumProstoy);
+            $('#sumProduct').html(data.sumProduct);
              var ctx = document.getElementById("Chart").getContext("2d");
             config = {
+                borderColor: 'rgb(0,100,255)',
                 type: 'bar',
                 data: {
                     labels: data.lableChart,
@@ -95,6 +105,7 @@ $(document).ready(function () {
                 $('#allProc').html(data.allProc);
                 $('#boomOut').html(data.boomOut);
                 $('#sumProstoy').html(data.sumProstoy);
+                $('#sumProduct').html(data.sumProduct);
                 dataUpdater();
             }
         });

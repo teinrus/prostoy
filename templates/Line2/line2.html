@@ -1,41 +1,21 @@
 {% block content %}
 
-{% if user.username == 'master' or user.username == 'admin' or user.username == 'operator5' %}
-        <script> // зависимости выпадающих списков таблици
+    {% if user.username == 'master' or user.username == 'admin' or user.username == 'operator2' %}
+        <script> // зависимости выпадающих списков таблицы
         $(document).ready(function () {
             var sor = [];
             let allProstoy
             var test =
             {{ prich|safe }}
             var temp = '%'
-            $(function () {
-                $('#sample_data').mousemove(function () {
-                    $('td.otv_pod', this).mousedown(function () {
 
-                        temp = '';
-                        for (let i = 0; i < test.length; i++) {
-                            if ($(this).text() === test[i].key) {
-                                temp += test[i].prichina + '%'
-                            }
-                        }
-                        allProstoy = temp.split('%')
-                        sor = [];
-                        for (let n = 0; n < allProstoy.length; n++) {
-                            if (allProstoy[n] !== '') {
-                                sor.push({value: allProstoy[n], text: allProstoy[n]})
-                            }
-                        }
-                    })
-                });
+            var dataTable2 = $('#sample_data2').DataTable();
 
-            });
 
-            var dataTable = $('#sample_data').DataTable();
-
-            $('#sample_data').editable({
+            $('#sample_data2').editable({
                 container: 'body',
                 selector: 'td.uchastok',
-                url: '/update',
+                url: '/update2',
                 title: 'uchastok',
                 type: 'POST',
                 value: "Не выбрано",
@@ -51,10 +31,10 @@
                 }
             });
 
-            $('#sample_data').editable({
+            $('#sample_data2').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
-                url: '/update',
+                url: '/update2',
                 title: 'otv_pod',
                 type: 'POST',
                 source: [
@@ -80,26 +60,29 @@
                     }
                 }
             });
-            $('#sample_data').editable({
-                    container: 'body',
-                    selector: 'td.prichina',
-                    url: '/update',
-                    title: 'prichina',
-                    type: 'POST',
-                    value: "Не выбрано",
-                    source:
-                        function () {
-                            return sor
-                        },
-                    validate: function (value) {
-                        if ($.trim(value)) {
-                        }
+            $('#sample_data2').editable({
+
+                container: 'body',
+                selector: 'td.prichina',
+                url: '/update2',
+                title: 'prichina',
+                type: 'POST',
+                value: "Не выбрано",
+                source:
+                    function () {
+                        return sor
+                    },
+                validate: function (value) {
+                    if ($.trim(value)) {
+
                     }
-                });
-            $('#sample_data').editable({
+                }
+            });
+
+            $('#sample_data2').editable({
                 container: 'body',
                 selector: 'td.comment',
-                url: '/update',
+                url: '/update2',
                 title: 'comment',
                 type: 'POST',
                 value: "",
@@ -111,13 +94,18 @@
                 }
             });
         });
+
+
         </script>
     {% endif %}
 
 
-    {% include 'Chart5.html' %}
 
-    <table id="sample_data" class="table table-bordered table-striped">
+    <body>
+
+    {% include 'Line2/Chart2.html' %}
+
+    <table id="sample_data2" class="table table-bordered table-striped">
         <thead>
         <tr>
             <th>id</th>
@@ -131,7 +119,7 @@
             <th>Комментарий</th>
         </thead>
         <tbody>
-        {% include 'table_body.html' %}
+        {% include 'Line2/table_body2.html' %}
         </tbody>
     </table>
     </body>

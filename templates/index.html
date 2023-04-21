@@ -2,11 +2,11 @@
 {% block content %}
 
     {% if user.username == 'operator5' %}
-        {% include 'line5.html' %}
+        {% include 'Line5/line5.html' %}
     {% endif %}
 
     {% if user.username == 'operator2' %}
-        {% include 'line2.html' %}
+        {% include 'Line2/line2.html' %}
     {% endif %}
 
     {% if user.username == 'master' or user.username == 'admin' %}
@@ -15,8 +15,8 @@
 
 
     {% if not user.is_authenticated %}
-        {% include 'Chart5.html' %}
-        {% include 'Chart2.html' %}
+        {% include 'Line5/Chart5.html' %}
+        {% include 'Line2/Chart2.html' %}
     {% endif %}
 
 

@@ -1,7 +1,7 @@
 {% block content %}
 
-    {% if user.username == 'master' or user.username == 'admin' or user.username == 'operator2' %}
-        <script> // зависимости выпадающих списков таблицы
+{% if user.username == 'master' or user.username == 'admin' or user.username == 'operator5' %}
+        <script> // зависимости выпадающих списков таблици
         $(document).ready(function () {
             var sor = [];
             let allProstoy
@@ -9,33 +9,16 @@
             {{ prich|safe }}
             var temp = '%'
             $(function () {
-                $('#sample_data2').mousemove(function () {
-                    $('td.otv_pod', this).mousedown(function () {
 
-                        temp = '';
-                        for (let i = 0; i < test.length; i++) {
-                            if ($(this).text() === test[i].key) {
-                                temp += test[i].prichina + '%'
-                            }
-                        }
-                        allProstoy = temp.split('%')
-                        sor = [];
-                        for (let n = 0; n < allProstoy.length; n++) {
-                            if (allProstoy[n] !== '') {
-                                sor.push({value: allProstoy[n], text: allProstoy[n]})
-                            }
-                        }
-                    })
-                });
 
             });
 
-            var dataTable2 = $('#sample_data2').DataTable();
+            var dataTable = $('#sample_data').DataTable();
 
-            $('#sample_data2').editable({
+            $('#sample_data').editable({
                 container: 'body',
                 selector: 'td.uchastok',
-                url: '/update2',
+                url: '/update',
                 title: 'uchastok',
                 type: 'POST',
                 value: "Не выбрано",
@@ -51,10 +34,10 @@
                 }
             });
 
-            $('#sample_data2').editable({
+            $('#sample_data').editable({
                 container: 'body',
                 selector: 'td.otv_pod',
-                url: '/update2',
+                url: '/update',
                 title: 'otv_pod',
                 type: 'POST',
                 source: [
@@ -80,10 +63,10 @@
                     }
                 }
             });
-            $('#sample_data2').editable({
+            $('#sample_data').editable({
                     container: 'body',
                     selector: 'td.prichina',
-                    url: '/update2',
+                    url: '/update',
                     title: 'prichina',
                     type: 'POST',
                     value: "Не выбрано",
@@ -96,11 +79,10 @@
                         }
                     }
                 });
-
-            $('#sample_data2').editable({
+            $('#sample_data').editable({
                 container: 'body',
                 selector: 'td.comment',
-                url: '/update2',
+                url: '/update',
                 title: 'comment',
                 type: 'POST',
                 value: "",
@@ -112,18 +94,13 @@
                 }
             });
         });
-
-
         </script>
     {% endif %}
 
 
+    {% include 'Line5/Chart5.html' %}
 
-    <body>
-
-    {% include 'Chart2.html' %}
-
-    <table id="sample_data2" class="table table-bordered table-striped">
+    <table id="sample_data" class="table table-bordered table-striped">
         <thead>
         <tr>
             <th>id</th>
@@ -137,7 +114,7 @@
             <th>Комментарий</th>
         </thead>
         <tbody>
-        {% include 'table_body2.html' %}
+        {% include 'Line5/table_body.html' %}
         </tbody>
     </table>
     </body>
