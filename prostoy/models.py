@@ -3,7 +3,7 @@ from django.db import models
 
 #Общиие показатели
 class prichina(models.Model):
-    Podrazdelenie = models.CharField('Подразделение', max_length=50, default='Не определено', blank=True, null=True)
+    key = models.CharField('Подразделение', max_length=50, default='Не определено', blank=True, null=True)
     prichina = models.CharField('Причина', max_length=50, default='Не определена', blank=True, null=True)
 
     def __str__(self):

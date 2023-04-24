@@ -3,8 +3,8 @@ import datetime
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
-from django.db.models import Count, Sum, Avg
-from django.http import HttpResponse, JsonResponse
+from django.db.models import Sum, Avg
+
 from django.shortcuts import render
 
 from prostoy.models import *
@@ -61,11 +61,10 @@ def index(request):
     prichAll=prichina.objects.all()
     podrazdeleniaEl=[]
     for el in prichAll:
-        podrazdeleniaEl.append(el.Podrazdelenie)
+        podrazdeleniaEl.append(el.key)
     otv_p=set(podrazdeleniaEl)
 
     prich = list(prichAll.values())
-
     uch = uchastok.objects.all()
     return render(request, "index.html", {
         'table5': table5,
