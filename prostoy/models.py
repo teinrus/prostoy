@@ -75,13 +75,20 @@ class bottleExplosion(models.Model):
 
 class bottling_plan(models.Model):
     Registrar = models.CharField('Регистратор', max_length=50, default='', blank=True, null=True)
+    GUIDDocument = models.CharField('GUIDDocument', max_length=32, default='', blank=True, null=True)
+
     LineNumber=models.IntegerField('Номер строки')
     Activity= models.BooleanField('Активность',default=True)
     Data= models.DateField('Дата')
+
     BottlingLine=models.CharField('Линия розлива', max_length=50, default='', blank=True, null=True)
+    GIUDLine=models.CharField('GIUDLine', max_length=32, default='', blank=True, null=True)
+
     ShiftNumber=models.IntegerField('Номер смены')
 
     Nomenclature=models.CharField('Номенклатура', max_length=80, default='', blank=True, null=True)
+    GUIDNomenсlature = models.CharField('GUIDNomenсlature', max_length=32, default=' ', blank=True, null=True)
+
     Quantity= models.IntegerField('Количество')
     def __str__(self):
         return str(self.Data)+'_' + str(self.BottlingLine)
@@ -141,6 +148,7 @@ class ProductionOutput5(models.Model):
 class NapAcratofori(models.Model):
     data = models.DateField('Дата')
     time = models.TimeField('Время')
+
     acr62_temp = models.IntegerField('Температура 62')
     acr62_press = models.IntegerField('Давление 62')
     acr62_volume = models.IntegerField('Обьем 62')

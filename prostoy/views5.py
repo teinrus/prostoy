@@ -1,9 +1,6 @@
 import datetime
 
-from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
-
-from django.db.models import Count, Sum, Avg
+from django.db.models import  Sum, Avg
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
@@ -124,7 +121,11 @@ def getData(requst):
     except:
         sumProstoy = '00:00'
     try:
+        sum=0
         sumProduct = productionOutput5.aggregate(Sum('production')).get('production__sum')
+        for el in productionOutput5:
+            sum+=el.production
+        print(sum)
         allProc = proc(startSmena, spotSmena, plan, sumProduct),
     except:
         sumProduct = 0

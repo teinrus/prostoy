@@ -58,15 +58,19 @@ def index(request):
                                        time__gte=startSmena,
                                        time__lte=spotSmena)
 
-    otv_p = otv_pod.objects.all()
+    prichAll=prichina.objects.all()
+    podrazdeleniaEl=[]
+    for el in prichAll:
+        podrazdeleniaEl.append(el.key)
+    otv_p=set(podrazdeleniaEl)
 
-    prich = list(prichina.objects.all().values())
+    prich = list(prichAll.values())
 
     uch = uchastok.objects.all()
     return render(request, "index.html", {
         'table5': table5,
         'speed5': speed5,
-        'otv_p': otv_p,
+        'otv_p':otv_p ,
         'prich': prich,
         'uch': uch,
 
@@ -273,9 +277,16 @@ def otchet(request):
 
 
 
-    otv_p = otv_pod.objects.all()
+
     uch = uchastok.objects.all()
-    prich = list(prichina.objects.all().values())
+
+    prichAll = prichina.objects.all()
+    podrazdeleniaEl = []
+    for el in prichAll:
+        podrazdeleniaEl.append(el.key)
+    otv_p = set(podrazdeleniaEl)
+
+    prich = list(prichAll.values())
 
     line = form.cleaned_data["LineF"]
     smena=form.cleaned_data["SmenaF"]
