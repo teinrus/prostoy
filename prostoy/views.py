@@ -61,7 +61,7 @@ def index(request):
     prichAll=prichina.objects.all()
     podrazdeleniaEl=[]
     for el in prichAll:
-        podrazdeleniaEl.append(el.key)
+        podrazdeleniaEl.append(el.Podrazdelenie)
     otv_p=set(podrazdeleniaEl)
 
     prich = list(prichAll.values())
@@ -283,7 +283,7 @@ def otchet(request):
     prichAll = prichina.objects.all()
     podrazdeleniaEl = []
     for el in prichAll:
-        podrazdeleniaEl.append(el.key)
+        podrazdeleniaEl.append(el.Podrazdelenie)
     otv_p = set(podrazdeleniaEl)
 
     prich = list(prichAll.values())

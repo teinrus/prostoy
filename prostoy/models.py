@@ -1,7 +1,75 @@
 from django.db import models
 
 
-# Create your models here.
+#Общиие показатели
+class prichina(models.Model):
+    Podrazdelenie = models.CharField('Подразделение', max_length=50, default='Не определено', blank=True, null=True)
+    prichina = models.CharField('Причина', max_length=50, default='Не определена', blank=True, null=True)
+
+    def __str__(self):
+        return str(self.prichina)
+
+    class Meta:
+        verbose_name_plural = "Причина простоя"
+
+class uchastok(models.Model):
+    uchastok = models.CharField('Где произошол простой', max_length=50, default='Не определено', blank=True, null=True)
+
+    def __str__(self):
+        return str(self.uchastok)
+
+    class Meta:
+        verbose_name_plural = "Участок линии"
+
+
+
+#1С
+class bottling_plan(models.Model):
+    Registrar = models.CharField('Регистратор', max_length=50, default='', blank=True, null=True)
+    GUIDDocument = models.CharField('GUIDDocument', max_length=32, default='', blank=True, null=True)
+
+    LineNumber=models.IntegerField('Номер строки')
+    Activity= models.BooleanField('Активность',default=True)
+    Data= models.DateField('Дата')
+
+    GIUDLine=models.CharField('GIUDLine', max_length=32, default='', blank=True, null=True)
+
+    ShiftNumber=models.IntegerField('Номер смены')
+
+    Nomenclature=models.CharField('Номенклатура', max_length=80, default='', blank=True, null=True)
+    GUIDNomenсlature = models.CharField('GUIDNomenсlature', max_length=32, default=' ', blank=True, null=True)
+
+    Quantity= models.IntegerField('Количество')
+    def __str__(self):
+        return str(self.Data)+'_' + str(self.BottlingLine)
+
+    class Meta:
+        verbose_name_plural = "План розлива"
+
+class Nomenclature(models.Model):
+
+    GUID = models.CharField('GUID', max_length=32)
+    Nomenclature=models.CharField('Номенклатура', max_length=150)
+    GroupProduction=models.CharField('Группа продуктов', max_length=32)
+    def __str__(self):
+        return str(self.Nomenclature)
+    class Meta:
+        verbose_name_plural = "Номенклатура"
+class Line(models.Model):
+
+    GUID = models.CharField('GUID', max_length=32)
+    Line=models.CharField('Название линии', max_length=50)
+    Podrazdelenie =models.CharField('Подразделение', max_length=32)
+    PodrazdeleniePloshadka = models.CharField('ПодразделениеПлощадка', max_length=32)
+    NomerLine = models.IntegerField('Номер линии')
+    def __str__(self):
+        return str(self.Line)
+    class Meta:
+        verbose_name_plural = "Линии"
+
+
+
+#Таблицы по линиям
 class Table5(models.Model):
     startdata = models.DateField('Дата начала простоя')
     starttime = models.TimeField('Время начала простоя')
@@ -17,86 +85,6 @@ class Table5(models.Model):
         return str(self.startdata)+'_' + str(self.starttime) + '_' +str(self.id)
     class Meta:
         verbose_name_plural = "Простои 5 линии"
-
-class Speed5(models.Model):
-    data = models.DateField('Дата')
-    time = models.TimeField('Время')
-    speed = models.IntegerField('Скорость линии')
-
-    def __str__(self):
-        return str(self.speed)
-
-    class Meta:
-        verbose_name_plural = "Производительность линии 5"
-
-
-class otv_pod(models.Model):
-    otv_pod = models.CharField('Ответственное подразделение', max_length=50, default='Не определено', blank=True,
-                               null=True)
-
-    def __str__(self):
-        return str(self.otv_pod)
-
-    class Meta:
-        verbose_name_plural = "Отвественное подразделение"
-
-
-class prichina(models.Model):
-    key = models.CharField('key', max_length=50, default='Не определена', blank=True, null=True)
-    prichina = models.CharField('Причина', max_length=50, default='Не определена', blank=True, null=True)
-
-    def __str__(self):
-        return str(self.prichina)
-
-    class Meta:
-        verbose_name_plural = "Причина простоя"
-
-
-class uchastok(models.Model):
-    uchastok = models.CharField('Где произошол простой', max_length=50, default='Не определено', blank=True, null=True)
-
-    def __str__(self):
-        return str(self.uchastok)
-
-    class Meta:
-        verbose_name_plural = "Участок линии"
-
-class bottleExplosion(models.Model):
-    data = models.DateField('Дата')
-    time = models.TimeField('Время')
-    bottle = models.IntegerField('Взрыв')
-
-    def __str__(self):
-        return str(self.data)+'_' + str(self.time)
-
-    class Meta:
-        verbose_name_plural = "Взрывы бутылок"
-
-
-class bottling_plan(models.Model):
-    Registrar = models.CharField('Регистратор', max_length=50, default='', blank=True, null=True)
-    GUIDDocument = models.CharField('GUIDDocument', max_length=32, default='', blank=True, null=True)
-
-    LineNumber=models.IntegerField('Номер строки')
-    Activity= models.BooleanField('Активность',default=True)
-    Data= models.DateField('Дата')
-
-    BottlingLine=models.CharField('Линия розлива', max_length=50, default='', blank=True, null=True)
-    GIUDLine=models.CharField('GIUDLine', max_length=32, default='', blank=True, null=True)
-
-    ShiftNumber=models.IntegerField('Номер смены')
-
-    Nomenclature=models.CharField('Номенклатура', max_length=80, default='', blank=True, null=True)
-    GUIDNomenсlature = models.CharField('GUIDNomenсlature', max_length=32, default=' ', blank=True, null=True)
-
-    Quantity= models.IntegerField('Количество')
-    def __str__(self):
-        return str(self.Data)+'_' + str(self.BottlingLine)
-
-    class Meta:
-        verbose_name_plural = "План розлива"
-
-
 class Table2(models.Model):
     startdata = models.DateField('Дата начала простоя')
     starttime = models.TimeField('Время начала простоя')
@@ -113,6 +101,16 @@ class Table2(models.Model):
     class Meta:
         verbose_name_plural = "Простои 2 линии"
 
+class Speed5(models.Model):
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+    speed = models.IntegerField('Скорость линии')
+
+    def __str__(self):
+        return str(self.speed)
+
+    class Meta:
+        verbose_name_plural = "Производительность линии 5"
 class Speed2(models.Model):
     data = models.DateField('Дата')
     time = models.TimeField('Время')
@@ -123,6 +121,17 @@ class Speed2(models.Model):
 
     class Meta:
         verbose_name_plural = "Производительность линии 2"
+
+class bottleExplosion(models.Model):
+    data = models.DateField('Дата')
+    time = models.TimeField('Время')
+    bottle = models.IntegerField('Взрыв')
+
+    def __str__(self):
+        return str(self.data)+'_' + str(self.time)
+
+    class Meta:
+        verbose_name_plural = "Взрывы бутылок"
 
 class ProductionOutput2(models.Model):
     data = models.DateField('Дата')
