@@ -5,9 +5,10 @@ from .models import *
 
 admin.site.register(Table5)
 admin.site.register(Speed5)
-class Table:
-    admin.site.register(Table2)
-    admin.site.register(Speed2)
+
+
+admin.site.register(Table2)
+admin.site.register(Speed2)
 
 admin.site.register(ProductionOutput2)
 admin.site.register(ProductionOutput5)

@@ -153,7 +153,14 @@ def getData2(requst):
                                   time__lte=spotSmena)
 
     try:
-        avgSpeed = round(speed2.aggregate(Avg('speed')).get('speed__avg'), 2)
+        count2=0
+        avg=0
+        for el in speed2:
+            if el.speed!=0:
+                count2+=1
+                avg+=el.speed
+
+        avgSpeed = round(avg/count2, 2)
     except:
         avgSpeed = 0
     try:

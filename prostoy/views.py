@@ -81,7 +81,7 @@ def index(request):
 
 # блок формирования отчета
 def otchet(request):
-
+    timeTemp = 0
     form = Otchet(request.GET)
     if form.is_valid():
         # Сортировка по дате
@@ -107,6 +107,13 @@ def otchet(request):
                                                   data__lte=form.cleaned_data["finish_data"],
                                                   time__gte=datetime.time(0),
                                                   time__lte=datetime.time(23, 59))
+
+                    try:
+                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data[
+                            "start_data"] + datetime.timedelta(days=1)
+                    except:
+                        timeTemp = 0
+
         if form.cleaned_data["SmenaF"] == 'Смена 1':
             table = Table5.objects.filter(starttime__gte=datetime.time(8),
                                           starttime__lte=datetime.time(16, 30),
@@ -125,6 +132,13 @@ def otchet(request):
                                           data__lte=form.cleaned_data["finish_data"],
                                           time__gte=datetime.time(8),
                                           time__lte=datetime.time(16, 30))
+            try:
+                timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                count=1+timeTemp.total_seconds()/3600/24
+                timeTemp=datetime.timedelta(hours=(8*count),minutes=30*count)
+            except:
+                timeTemp = 0
+            print(timeTemp)
         if form.cleaned_data["SmenaF"] == 'Смена 2':
             table = Table5.objects.filter(starttime__gte=datetime.time(16, 30),
                                           starttime__lte=datetime.time(23, 59),
@@ -143,6 +157,13 @@ def otchet(request):
                                           data__lte=form.cleaned_data["finish_data"],
                                           time__gte=datetime.time(16, 30),
                                           time__lte=datetime.time(23, 59))
+            try:
+                timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                count=timeTemp.total_seconds()/3600/24+1
+
+                timeTemp=datetime.timedelta(hours=(7*count),minutes=30*count)
+            except:
+                timeTemp = 0
         if form.cleaned_data["SmenaF"] == 'Смена 3':
             table = Table5.objects.filter(starttime__gte=datetime.time(00, 00),
                                           starttime__lte=datetime.time(8, 00),
@@ -162,7 +183,13 @@ def otchet(request):
                                           time__gte=datetime.time(00, 00),
                                           time__lte=datetime.time(8, 00))
 
+            try:
+                timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                count=timeTemp.total_seconds()/3600/24+1
 
+                timeTemp=datetime.timedelta(hours=(8*count))
+            except:
+                timeTemp = 0
         # Сортировка по сменам линии 2:
         if form.cleaned_data["start_data"] and form.cleaned_data["finish_data"] and (
                 form.cleaned_data["LineF"] == 'Линиия 2'):
@@ -182,7 +209,11 @@ def otchet(request):
                                                    data__lte=form.cleaned_data["finish_data"],
                                                    time__gte=datetime.time(0),
                                                    time__lte=datetime.time(23, 59))
-
+                    try:
+                        timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data[
+                            "start_data"] + datetime.timedelta(days=1)
+                    except:
+                        timeTemp = 0
             if form.cleaned_data["SmenaF"] == 'Смена 1':
                 table2 = Table2.objects.filter(starttime__gte=datetime.time(8),
                                                starttime__lte=datetime.time(16, 30),
@@ -197,7 +228,13 @@ def otchet(request):
                                                data__lte=form.cleaned_data["finish_data"],
                                                time__gte=datetime.time(8),
                                                time__lte=datetime.time(16, 30))
+                try:
+                    timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                    count = timeTemp.total_seconds() / 3600 / 24 + 1
 
+                    timeTemp = datetime.timedelta(hours=(8*count),minutes=30*count)
+                except:
+                    timeTemp = 0
             if form.cleaned_data["SmenaF"] == 'Смена 2':
                 table2 = Table2.objects.filter(starttime__gte=datetime.time(16, 30),
                                                starttime__lte=datetime.time(23, 59),
@@ -212,7 +249,20 @@ def otchet(request):
                                                data__lte=form.cleaned_data["finish_data"],
                                                time__gte=datetime.time(16, 30),
                                                time__lte=datetime.time(23, 59))
+                try:
+                    timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
 
+                    if timeTemp.total_seconds()!=0.0:
+                        count = (timeTemp.total_seconds() / 3600 / 24)
+                        count+=1
+                        print(count)
+                    else:
+                        count=1
+                    timeTemp = datetime.timedelta(hours=(7*count),minutes=30*count)
+
+                except:
+                    timeTemp = 0
+                print(timeTemp)
             if form.cleaned_data["SmenaF"] == 'Смена 3':
                 table2 = Table2.objects.filter(starttime__gte=datetime.time(00, 00),
                                                starttime__lte=datetime.time(8, 00),
@@ -227,13 +277,18 @@ def otchet(request):
                                                data__lte=form.cleaned_data["finish_data"],
                                                time__gte=datetime.time(00, 00),
                                                time__lte=datetime.time(8, 00))
+                try:
+                    timeTemp = form.cleaned_data["finish_data"] - form.cleaned_data["start_data"]
+                    count = timeTemp.total_seconds() / 3600 / 24 + 1
+
+                    timeTemp = datetime.timedelta(hours=(8 * count))
+                except:
+                    timeTemp = 0
 
             table=table2
             speed=speed2
             prod=productionOutput2
             boom=0
-
-
     lableChart = []
     dataChart = []
 
@@ -244,6 +299,7 @@ def otchet(request):
             allProd = 0
     except:
         allProd = 0
+
 
     #Общее количество  врывов бутылок
     try:
@@ -261,9 +317,15 @@ def otchet(request):
         sumProstoy = 0
     # Средняя скорость
     try:
-        avgSpeed = round(speed.aggregate(Avg('speed')).get('speed__avg'), 2)
+        timeWork=(timeTemp -sumProstoy)
     except:
-        avgSpeed = 0
+        timeWork=0
+    try:
+        avgSpeed =round((allProd / timeWork.total_seconds() * 3600),2)
+
+    except:
+        avgSpeed=0
+
 
     # Данные для графика
     try:
@@ -282,22 +344,33 @@ def otchet(request):
     prichAll = prichina.objects.all()
     podrazdeleniaEl = []
     for el in prichAll:
-        podrazdeleniaEl.append(el.Podrazdelenie)
+        podrazdeleniaEl.append(el.key)
     otv_p = set(podrazdeleniaEl)
 
     prich = list(prichAll.values())
 
     line = form.cleaned_data["LineF"]
     smena=form.cleaned_data["SmenaF"]
+    nachaloOt = form.cleaned_data["start_data"]
+    okonchanieOt = form.cleaned_data["finish_data"]
+
+
 
     return render(request, "otchet.html", {
         'table': table,
         'form': form,
+
         'line':line,
         'smena':smena,
+        'nachaloOt':nachaloOt,
+        'okonchanieOt':okonchanieOt,
 
+        'timeWork':timeWork,
         'sumProstoy': sumProstoy,
+
         'avgSpeed': avgSpeed,
+
+
         'boomOut': boomOut,
         'allProd': allProd,
 

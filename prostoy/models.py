@@ -26,41 +26,39 @@ class uchastok(models.Model):
 #1С
 class bottling_plan(models.Model):
     Registrar = models.CharField('Регистратор', max_length=50, default='', blank=True, null=True)
-    GUIDDocument = models.CharField('GUIDDocument', max_length=32, default='', blank=True, null=True)
+    GUIDDocument = models.CharField('GUIDDocument', max_length=36, default='', blank=True, null=True)
 
-    LineNumber=models.IntegerField('Номер строки')
-    Activity= models.BooleanField('Активность',default=True)
+
     Data= models.DateField('Дата')
 
-    GIUDLine=models.CharField('GIUDLine', max_length=32, default='', blank=True, null=True)
+    GIUDLine=models.CharField('GIUDLine', max_length=36, default='', blank=True, null=True)
 
     ShiftNumber=models.IntegerField('Номер смены')
 
-    Nomenclature=models.CharField('Номенклатура', max_length=80, default='', blank=True, null=True)
-    GUIDNomenсlature = models.CharField('GUIDNomenсlature', max_length=32, default=' ', blank=True, null=True)
+    GUIDNomenсlature = models.CharField('GUIDNomenсlature', max_length=36, default=' ', blank=True, null=True)
 
     Quantity= models.IntegerField('Количество')
     def __str__(self):
-        return str(self.Data)+'_' + str(self.BottlingLine)
+        return str(self.Data)+'_'
 
     class Meta:
         verbose_name_plural = "План розлива"
 
 class Nomenclature(models.Model):
 
-    GUID = models.CharField('GUID', max_length=32)
+    GUID = models.CharField('GUID', max_length=36)
     Nomenclature=models.CharField('Номенклатура', max_length=150)
-    GroupProduction=models.CharField('Группа продуктов', max_length=32)
+    GroupProduction=models.CharField('Группа продуктов', max_length=150)
     def __str__(self):
         return str(self.Nomenclature)
     class Meta:
         verbose_name_plural = "Номенклатура"
 class Line(models.Model):
 
-    GUID = models.CharField('GUID', max_length=32)
+    GUID = models.CharField('GUID', max_length=36)
     Line=models.CharField('Название линии', max_length=50)
-    Podrazdelenie =models.CharField('Подразделение', max_length=32)
-    PodrazdeleniePloshadka = models.CharField('ПодразделениеПлощадка', max_length=32)
+    Podrazdelenie =models.CharField('Подразделение', max_length=150)
+    PodrazdeleniePloshadka = models.CharField('ПодразделениеПлощадка', max_length=150)
     NomerLine = models.IntegerField('Номер линии')
     def __str__(self):
         return str(self.Line)
@@ -158,51 +156,51 @@ class NapAcratofori(models.Model):
     data = models.DateField('Дата')
     time = models.TimeField('Время')
 
-    acr62_temp = models.IntegerField('Температура 62')
-    acr62_press = models.IntegerField('Давление 62')
-    acr62_volume = models.IntegerField('Обьем 62')
+    acr62_temp = models.FloatField('Температура 62',default=0.0, blank=True, null=True)
+    acr62_press = models.FloatField('Давление 62',default=0.0, blank=True, null=True)
+    acr62_volume = models.FloatField('Обьем 62',default=0.0, blank=True, null=True)
 
-    acr63_temp = models.IntegerField('Температура 63')
-    acr63_press = models.IntegerField('Давление 63')
-    acr63_volume = models.IntegerField('Обьем 63')
+    acr63_temp = models.FloatField('Температура 63',default=0.0, blank=True, null=True)
+    acr63_press = models.FloatField('Давление 63',default=0.0, blank=True, null=True)
+    acr63_volume = models.FloatField('Обьем 63',default=0.0, blank=True, null=True)
 
-    acr64_temp = models.IntegerField('Температура 64')
-    acr64_press = models.IntegerField('Давление 64')
-    acr64_volume = models.IntegerField('Обьем 64')
+    acr64_temp = models.FloatField('Температура 64',default=0.0, blank=True, null=True)
+    acr64_press = models.FloatField('Давление 64',default=0.0, blank=True, null=True)
+    acr64_volume = models.FloatField('Обьем 64',default=0.0, blank=True, null=True)
 
-    acr65_temp = models.IntegerField('Температура 65')
-    acr65_press = models.IntegerField('Давление 65')
-    acr65_volume = models.IntegerField('Обьем 65')
+    acr65_temp = models.FloatField('Температура 65',default=0.0, blank=True, null=True)
+    acr65_press = models.FloatField('Давление 65',default=0.0, blank=True, null=True)
+    acr65_volume = models.FloatField('Обьем 65',default=0.0, blank=True, null=True)
 
-    acr66_temp = models.IntegerField('Температура 66')
-    acr66_press = models.IntegerField('Давление 66')
-    acr66_volume = models.IntegerField('Обьем 66')
+    acr66_temp = models.FloatField('Температура 66',default=0.0, blank=True, null=True)
+    acr66_press = models.FloatField('Давление 66',default=0.0, blank=True, null=True)
+    acr66_volume = models.FloatField('Обьем 66',default=0.0, blank=True, null=True)
 
-    acr67_temp = models.IntegerField('Температура 67')
-    acr67_press = models.IntegerField('Давление 67')
-    acr67_volume = models.IntegerField('Обьем 67')
+    acr67_temp = models.FloatField('Температура 67',default=0.0, blank=True, null=True)
+    acr67_press = models.FloatField('Давление 67',default=0.0, blank=True, null=True)
+    acr67_volume = models.FloatField('Обьем 67',default=0.0, blank=True, null=True)
 
-    acr68_temp = models.IntegerField('Температура 68')
-    acr68_press = models.IntegerField('Давление 68')
-    acr68_volume = models.IntegerField('Обьем 68')
+    acr68_temp = models.FloatField('Температура 68',default=0.0, blank=True, null=True)
+    acr68_press = models.FloatField('Давление 68',default=0.0, blank=True, null=True)
+    acr68_volume = models.FloatField('Обьем 68',default=0.0, blank=True, null=True)
 
-    acr69_temp = models.IntegerField('Температура 69')
-    acr69_press = models.IntegerField('Давление 69')
-    acr69_volume = models.IntegerField('Обьем 69')
+    acr69_temp = models.FloatField('Температура 69',default=0.0, blank=True, null=True)
+    acr69_press = models.FloatField('Давление 69',default=0.0, blank=True, null=True)
+    acr69_volume = models.FloatField('Обьем 69',default=0.0, blank=True, null=True)
 
-    acr70_temp = models.IntegerField('Температура 70')
-    acr70_press = models.IntegerField('Давление 70')
-    acr70_volume = models.IntegerField('Обьем 70')
+    acr70_temp = models.FloatField('Температура 70',default=0.0, blank=True, null=True)
+    acr70_press = models.FloatField('Давление 70',default=0.0, blank=True, null=True)
+    acr70_volume = models.FloatField('Обьем 70',default=0.0, blank=True, null=True)
 
-    acr82_temp1 = models.IntegerField('Температура 82 верх')
-    acr82_temp2 = models.IntegerField('Температура 82 низ')
-    acr82_press = models.IntegerField('Давление 82')
-    acr82_volume = models.IntegerField('Обьем 82')
+    acr82_temp1 = models.FloatField('Температура 82 верх',default=0.0, blank=True, null=True)
+    acr82_temp2 = models.FloatField('Температура 82 низ',default=0.0, blank=True, null=True)
+    acr82_press = models.FloatField('Давление 82',default=0.0, blank=True, null=True)
+    acr82_volume = models.FloatField('Обьем 82',default=0.0, blank=True, null=True)
 
-    acr83_temp1 = models.IntegerField('Температура 83 верх')
-    acr83_temp2 = models.IntegerField('Температура 83 низ')
-    acr83_press = models.IntegerField('Давление 83')
-    acr83_volume = models.IntegerField('Обьем 83')
+    acr83_temp1 = models.FloatField('Температура 83 верх',default=0.0, blank=True, null=True)
+    acr83_temp2 = models.FloatField('Температура 83 низ',default=0.0, blank=True, null=True)
+    acr83_press = models.FloatField('Давление 83',default=0.0, blank=True, null=True)
+    acr83_volume = models.FloatField('Обьем 83',default=0.0, blank=True, null=True)
 
     def __str__(self):
         return str(self.data)+str(self.time)
